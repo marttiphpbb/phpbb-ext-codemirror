@@ -13,8 +13,15 @@ class v_0_1_0 extends \phpbb\db\migration\migration
 {
 	public function update_data()
 	{
+		$package_json = file_get_contents(__DIR__ . '/../codemirror/package.json');
+		$version = json_decode($package_json, true)['version'];
+
+		$data = [
+			'version'	=> $version,
+		];
+
 		return [
-			['config_text.add', [store::KEY, serialize([])]],			
+			['config_text.add', [store::KEY, serialize($data)]],			
 
 			['module.add', [
 				'acp',
@@ -32,28 +39,6 @@ class v_0_1_0 extends \phpbb\db\migration\migration
 					],
 				],
 			]],
-		];
-	}
-
-	public function update_schema()
-	{
-		return [
-			'add_columns'        => [
-				$this->table_prefix . 'topics' => [
-					cnst::FROM_FORUM_ID_COLUMN  => ['UINT', NULL],
-				],
-			],
-		];
-	}
-
-	public function revert_schema()
-	{
-		return [
-			'drop_columns'        => [
-				$this->table_prefix . 'topics'	=> [
-					cnst::FROM_FORUM_ID_COLUMN,
-				],
-			],
 		];
 	}
 }

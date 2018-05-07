@@ -9,7 +9,12 @@ services:
         class: marttiphpbb\codemirror\event\listener
         arguments:
             - '@dispatcher'
-            - '@marttiphpbb\codemirror\service\store'
+            - '@marttiphpbb.codemirror.service.store'
             - '%core.root_path%'
+        tags:
+            - { name: event.listener }
+
+    marttiphpbb.codemirror.example_listener:
+        class: marttiphpbb\codemirror\event\example_listener
         tags:
             - { name: event.listener }

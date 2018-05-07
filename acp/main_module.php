@@ -20,7 +20,9 @@ class main_module
 		$request = $phpbb_container->get('request');
 		$template = $phpbb_container->get('template');
 		$language = $phpbb_container->get('language');
+//		$finder = $phpbb_container->get('ext.finder');
 		$store = $phpbb_container->get('marttiphpbb.codemirror.service.store');
+		$example_listener = $phpbb_container->get('marttiphpbb.codemirror.example_listener');
 	
 		$language->add_lang('acp', cnst::FOLDER);
 		add_form_key(cnst::FOLDER);
@@ -32,6 +34,8 @@ class main_module
 				$this->tpl_name = 'settings';
 				$this->page_title = $language->lang(cnst::L_ACP . '_SETTINGS');
 
+
+
 				if ($request->is_set_post('submit'))
 				{
 					if (!check_form_key(cnst::FOLDER))
@@ -42,7 +46,18 @@ class main_module
 					trigger_error($language->lang(cnst::L_ACP . '_SETTING_SAVED') . adm_back_link($this->u_action));
 				}
 
-				$template->assign_var(cnst::L . '_ID', $config[cnst::CONFIG_ARCHIVE_ID]);
+				$data = $store->get_all();
+
+
+
+				$example_listener->load_codemirror($data);
+
+
+				$template->assign_vars([
+					'ACP_MARTTIPHPBB_CODEMIRROR_VERSION'	=> $data['version'],
+					'ACP_MARTTIPHPBB_CODEMIRROR_THEME'		=> $data['theme'] ?? '',
+
+				]);
 	
 				break;
 		}

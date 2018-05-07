@@ -13,7 +13,7 @@ use marttiphpbb\codemirror\service\store;
 use marttiphpbb\codemirror\util\cnst;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class topiclist_listener implements EventSubscriberInterface
+class listener implements EventSubscriberInterface
 {
 	/** @var dispatcher */
 	private $dispatcher;

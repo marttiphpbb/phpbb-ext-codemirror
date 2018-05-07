@@ -8,6 +8,7 @@
 namespace marttiphpbb\codemirror;
 
 use phpbb\extension\base;
+use marttiphpbb\codemirror\service\store;
 
 class ext extends base
 {
@@ -20,15 +21,27 @@ class ext extends base
 		return phpbb_version_compare($config['version'], '3.2', '>=') && version_compare(PHP_VERSION, '7', '>=');
 	}
 
-	public function enable_step(string $step)
+	public function enable_step($old_step)
 	{
-		if ($step == '')
+		if ($old_step === false)
 		{
-			$store = $this->container->get('marttiphpbb.codemirror.service.store');
-			$package_json = file_get_contents(__DIR__ . '/../codemirror/package.json');
-			$package_json = json_decode($package_json, true);
-			$store->set('version', $package_json['version']);
-			return 'get_codemirror_version';
+			$config_text = $this->container->get('config_text');
+			$data = $config_text->get(store::KEY);
+
+			if ($data)
+			{
+				// if no data exists, version setting is handled by migration.
+
+				$package_json = file_get_contents(__DIR__ . '/codemirror/package.json');
+				$version = json_decode($package_json, true)['version'];
+				$data = serialize(array_merge(unserialize($data), ['version' => $version]));
+				$config_text->set(store::KEY, $data);
+
+			}
+	
+			return 'codemirror_version_set';
 		}
+
+        return parent::enable_step($old_state);
 	}
 }

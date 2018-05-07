@@ -18,8 +18,9 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 
-//	'ACP_MARTTIPHPBB_CODEMIRROR'					=> 'CodeMirror',
-//	'ACP_MARTTIPHPBB_CODEMIRROR_SETTINGS'				=> 'Settings',
-	'ACP_MARTTIPHPBB_CODEMIRROR_EXPLAIN'			=> '',
-	'ACP_MARTTIPHPBB_CODEMIRROR_SETTING_SAVED'		=> 'The setting was saved.'
+	'ACP_MARTTIPHPBB_CODEMIRROR_VERSION'			=> '<a href="http://codemirror.net">CodeMirror</a> version: %s',
+	'ACP_MARTTIPHPBB_CODEMIRROR_THEME'				=> 'Theme',
+	'ACP_MARTTIPHPBB_CODEMIRROR_IDENT'				=> 'Ident',
+	'ACP_MARTTIPHPBB_CODEMIRROR_ENABLE_LINTING'		=> 'Enable linting',
+	'ACP_MARTTIPHPBB_CODEMIRROR_SETTING_SAVED'		=> 'The settings were saved.'
 ]);
