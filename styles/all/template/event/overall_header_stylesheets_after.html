@@ -1,0 +1,5 @@
+{%- if marttiphpbb_codemirror.enable and not $INCLUDED_CODEMIRROR -%}
+    {%- set $INCLUDED_CODEMIRROR = true -%}
+    {%- set marttiphpbb_codemirror_include = true -%}   
+    <link rel="stylesheet" href="lib/codemirror.css">
+{%- endif -%}

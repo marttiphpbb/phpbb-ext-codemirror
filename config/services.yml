@@ -1,0 +1,15 @@
+services:
+    marttiphpbb.codemirror.service.store:
+        class: marttiphpbb\codemirror\service\store
+        arguments:
+            - '@config_text'
+            - '@cache.driver'
+
+    marttiphpbb.codemirror.listener:
+        class: marttiphpbb\codemirror\event\listener
+        arguments:
+            - '@dispatcher'
+            - '@marttiphpbb\codemirror\service\store'
+            - '%core.root_path%'
+        tags:
+            - { name: event.listener }
