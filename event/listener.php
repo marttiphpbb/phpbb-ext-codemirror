@@ -27,6 +27,9 @@ class listener implements EventSubscriberInterface
 	/** @var string */
 	private $mode = '';
 
+	/** @var string */
+	private $history_id;
+
 	/** @var array */
 	private $load_extra = [];
 
@@ -61,12 +64,14 @@ class listener implements EventSubscriberInterface
 	public function core_adm_page_header_after(event $event)
 	{
 		$mode = '';
+		$history_id = '';
 		$load_extra = [];
 		$overwrite_config = [];
 	
 		/**
 		 * @event 
 		 * @var string $mode javascript, css, html, php, twig, yaml, json, markdown, ...
+		 * @var history_id 
 		 * @var array $load_extra
 		 * @var array $overwrite_config
 		 */
@@ -76,6 +81,7 @@ class listener implements EventSubscriberInterface
 		if ($mode)
 		{
 			$this->mode = $mode;
+			$this->history_id = $history_id;
 			$this->load_extra = $load_extra;
 			$this->override_config = $override_config;
 		}
@@ -86,9 +92,10 @@ class listener implements EventSubscriberInterface
 	 * @param array $load_extra
 	 * @param array $override_config 
 	 */
-	public function set(string $mode, array $load_extra = [], array $override_config = [])
+	public function set(string $mode, string $history_id = '', array $load_extra = [], array $override_config = [])
 	{
 		$this->mode = $mode;
+		$this->history_id = $history_id;
 	}
 
 	public function core_twig_environment_render_template_before(event $event)
@@ -110,6 +117,12 @@ class listener implements EventSubscriberInterface
 		$data_attr = ' data-marttiphpbb-codemirror="%s"';
 		$config = htmlspecialchars(json_encode($config), ENT_QUOTES, 'UTF-8');
 		$data_attr = sprintf($data_attr, $config);
+
+		if ($this->history_id !== '')
+		{
+			$data_attr .= ' data-marttiphpbb-codemirror-history-id="';
+			$data_attr .= $this->history_id . '"';
+		}
 
 		$context['marttiphpbb_codemirror'] = [
 			'data'			=> $data_attr,

@@ -64,7 +64,7 @@ class main_module
 					'themes'	=> $themes,
 				];
 
-				$listener->set('javascript', $load_extra);
+				$listener->set('javascript', 'oufti', $load_extra);
 
 				$this->tpl_name = 'settings';
 				$this->page_title = $language->lang(cnst::L_ACP . '_SETTINGS');
