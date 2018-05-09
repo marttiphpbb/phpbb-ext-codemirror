@@ -13,8 +13,3 @@ services:
             - '%core.root_path%'
         tags:
             - { name: event.listener }
-
-    marttiphpbb.codemirror.example_listener:
-        class: marttiphpbb\codemirror\event\example_listener
-        tags:
-            - { name: event.listener }

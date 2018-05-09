@@ -1,4 +1,4 @@
-{%- if marttiphpbb_codemirror_include -%}
-    <script src="lib/codemirror.js"></script>
-    <script src="mode/javascript/javascript.js"></script>
+{%- if marttiphpbb_codemirror and not definition.INCLUDED_CODEMIRROR -%}
+    {%- DEFINE INCLUDED_CODEMIRROR = true -%}
+    {%- include '@marttiphpbb_codemirror/include/codemirror.html' with {'c': marttiphpbb_codemirror} only -%}
 {%- endif -%}

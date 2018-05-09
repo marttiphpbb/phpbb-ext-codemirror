@@ -1,0 +1,28 @@
+{%- INCLUDECSS c.path~'lib/codemirror.css'~c.version_param -%}
+
+{%- for theme in c.load.themes -%}
+    {%- if theme != 'default' -%}
+        {%- INCLUDECSS c.path~'theme/'~theme~'.css'~c.version_param -%}
+    {%- endif -%}
+{%- endfor -%}
+
+{%- INCLUDEJS c.path~'lib/codemirror.js'~c.version_param -%}
+
+{%- for mode in c.load.modes -%}
+    {%- INCLUDEJS c.path~'mode/'~mode~'/'~mode~'.js'~c.version_param -%}
+{%- endfor -%}
+
+{%- for keymap in c.load.keymaps -%}
+    {%- INCLUDEJS c.path~'keymap/'~keymap~'.js'~c.version_param -%}
+{%- endfor -%}
+
+{%- for addon in c.load.addons -%}
+    {%- for css in addon.css -%}
+        {%- INCLUDECSS c.path~'addon/'~addon.name~'/'~css~'.css'~c.version_param -%}
+    {%- endfor -%}
+    {%- for js in addon.js -%}
+        {%- INCLUDEJS c.path~'addon/'~addon.name~'/'~js~'.js'~c.version_param -%}
+    {%- endfor -%}
+{%- endfor -%}
+
+{%- INCLUDEJS '@marttiphpbb_codemirror/marttiphpbb_codemirror.js' -%}

@@ -20,10 +20,14 @@ class main_module
 		$request = $phpbb_container->get('request');
 		$template = $phpbb_container->get('template');
 		$language = $phpbb_container->get('language');
-//		$finder = $phpbb_container->get('ext.finder');
+		$ext_manager = $phpbb_container->get('ext.manager');
 		$store = $phpbb_container->get('marttiphpbb.codemirror.service.store');
-		$example_listener = $phpbb_container->get('marttiphpbb.codemirror.example_listener');
-	
+		$listener = $phpbb_container->get('marttiphpbb.codemirror.listener');
+
+		$phpbb_root_path = $phpbb_container->getParameter('core.root_path');
+		$ext_relative_path = 'ext/' . cnst::FOLDER . '/';
+		$ext_root_path = $phpbb_root_path . $ext_relative_path;
+
 		$language->add_lang('acp', cnst::FOLDER);
 		add_form_key(cnst::FOLDER);
 
@@ -31,10 +35,39 @@ class main_module
 		{
 			case 'settings':
 
+				$finder = $ext_manager->get_finder();
+
+				$codemirror_dir = 'codemirror/';
+				$theme_dir = $codemirror_dir . 'theme/';
+
+				$files = $finder
+					->extension_suffix('.css')
+					->extension_directory($theme_dir)
+					->find_from_extension(cnst::FOLDER, $ext_root_path);
+				$themes = ['default'];
+				
+				foreach($files as $file => $ext)
+				{
+					$themes[] = str_replace([$ext_relative_path . $theme_dir, '.css'], '', $file);
+				}
+
+				sort($themes);
+
+				foreach($themes as $theme)
+				{
+					$template->assign_block_vars('themes', [
+						'NAME'	=> $theme,
+					]);
+				}
+
+				$load_extra = [
+					'themes'	=> $themes,
+				];
+
+				$listener->set('javascript', $load_extra);
+
 				$this->tpl_name = 'settings';
 				$this->page_title = $language->lang(cnst::L_ACP . '_SETTINGS');
-
-
 
 				if ($request->is_set_post('submit'))
 				{
@@ -47,11 +80,6 @@ class main_module
 				}
 
 				$data = $store->get_all();
-
-
-
-				$example_listener->load_codemirror($data);
-
 
 				$template->assign_vars([
 					'ACP_MARTTIPHPBB_CODEMIRROR_VERSION'	=> $data['version'],
