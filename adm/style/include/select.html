@@ -1,0 +1,16 @@
+<dl>
+    <dt>
+        <label for="{%- block id -%}{{- type -}}{%- endblock -%}">
+            {%- block label -%}{{- label -}}{%- endblock -%}
+        </label>
+    </dt>
+    <dd>
+        <select id="{{- block('id') -}}" name="{%- block name -%}{{- type -}}{%- endblock -%}"{%- block data_attr %} data-marttiphpbb-codemirror-{{- type -}}{%- endblock -%}>
+            {%- for t in options -%}
+                <option{%- if selected == t %} selected="selected"{%- endif -%}>
+                    {{- t -}}
+                </option>
+            {%- endfor -%}
+        </select>
+    </dd>
+</dl>

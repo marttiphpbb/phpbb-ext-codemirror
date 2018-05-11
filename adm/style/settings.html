@@ -1,54 +1,15 @@
 {%- include 'overall_header.html' -%}
 
-<h1>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_SETTINGS') -}}</h1>
-<p>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_VERSION', ACP_MARTTIPHPBB_CODEMIRROR_VERSION) -}}</p>
+<h1>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_CONFIG') -}}</h1>
+<p>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_CONFIG_EXPLAIN') -}}</p>
+<p>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_VERSION', marttiphpbb_codemirror.version) -}}</p>
 
 <form id="acp_board" method="post" action="{U_ACTION}">
 	<fieldset>
-		<dl>
-			<dt>
-				<label for="filename">
-					{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_THEME') -}}
-				</label>
-			</dt>
-			<dd>
-				<select id="filename" name="filename">
-					{%- for s in themes -%}
-						<option value="{{- s.NAME -}}">
-							{{- s.NAME -}}
-						</option>
-					{%- endfor -%}
-				</select>
-				<input class="button2" type="submit" value="{{- lang('SELECT') -}}" />
-			</dd>
-		</dl>
+		{%- include '@marttiphpbb_codemirror/include/theme_select.html' -%}
 
-		<textarea name="example" id="example"{{- marttiphpbb_codemirror.data ?? '' -}}>
-			{{- EXAMPLE_CONTENT -}}
-
-
-			ouftiqùkdqùmks
-
-
-			dsfq
-			dqfdqf
-			dqfdqf
-
-
-
-			dsfqdsfdqsf
-
-
-
-			fqsddqsfdqsfqsfqsdffffffffffffffffffffffffffffffffffffffffffffffffqffdqf
-
-			sqdfqsfqsfqsdfqsdfdqsdsqdsqf
-			dsqsfdqsfqsfqsdfqsddqsdqsfqsdfqsdfjqsdjfqsdfkqsdfkjqsfd
-			qsdlfjqsdmfljqsdlfjldmqsjfmqsdlmfjqsldmfjmqsfldlmqsdjfmqsdfjmqsd
-			dlslfqdslmjflmqsdlfjqsdlmfjlqmsdflmqsdjfjqsdmjfqmsdlfj
-			dsjfqsdmjfmlqsdjfmlqsdlmfdlqsjfdlmjsqdlfmlmfsqdjlqsfd
-			dslfjlqsjdflmqdsjflmqsjfmljmljsfdlmjlmqsfdjl
-			
+		<textarea name="config" id="config"{{- marttiphpbb_codemirror.data_attr ?? '' -}}>
+			{{- CONFIG_CONTENT -}}
 		</textarea>
 
 	</fieldset>

@@ -1,15 +1,31 @@
 services:
-    marttiphpbb.codemirror.service.store:
+    marttiphpbb.codemirror.store:
         class: marttiphpbb\codemirror\service\store
         arguments:
             - '@config_text'
             - '@cache.driver'
 
+    marttiphpbb.codemirror.config:
+        class: marttiphpbb\codemirror\service\config
+        arguments:
+            - '@marttiphpbb.codemirror.store'
+
+    marttiphpbb.codemirror.available:
+        class: marttiphpbb\codemirror\service\available
+        arguments:
+            - '@ext.manager'
+            - '%core.root_path%'
+
+    marttiphpbb.codemirror.load:
+        class: marttiphpbb\codemirror\service\load
+        arguments:
+            - '@marttiphpbb.codemirror.config'
+            - '@marttiphpbb.codemirror.available'
+            - '%core.root_path%'
+
     marttiphpbb.codemirror.listener:
         class: marttiphpbb\codemirror\event\listener
         arguments:
-            - '@dispatcher'
-            - '@marttiphpbb.codemirror.service.store'
-            - '%core.root_path%'
+            - '@marttiphpbb.codemirror.load'
         tags:
             - { name: event.listener }

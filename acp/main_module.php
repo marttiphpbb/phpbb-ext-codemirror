@@ -20,9 +20,9 @@ class main_module
 		$request = $phpbb_container->get('request');
 		$template = $phpbb_container->get('template');
 		$language = $phpbb_container->get('language');
-		$ext_manager = $phpbb_container->get('ext.manager');
-		$store = $phpbb_container->get('marttiphpbb.codemirror.service.store');
-		$listener = $phpbb_container->get('marttiphpbb.codemirror.listener');
+
+		$load = $phpbb_container->get('marttiphpbb.codemirror.load');
+//		$codemirror_config = $phpbb_container->get('marttiphpbb.codemirror.config');
 
 		$phpbb_root_path = $phpbb_container->getParameter('core.root_path');
 		$ext_relative_path = 'ext/' . cnst::FOLDER . '/';
@@ -35,37 +35,6 @@ class main_module
 		{
 			case 'settings':
 
-				$finder = $ext_manager->get_finder();
-
-				$codemirror_dir = 'codemirror/';
-				$theme_dir = $codemirror_dir . 'theme/';
-
-				$files = $finder
-					->extension_suffix('.css')
-					->extension_directory($theme_dir)
-					->find_from_extension(cnst::FOLDER, $ext_root_path);
-				$themes = ['default'];
-				
-				foreach($files as $file => $ext)
-				{
-					$themes[] = str_replace([$ext_relative_path . $theme_dir, '.css'], '', $file);
-				}
-
-				sort($themes);
-
-				foreach($themes as $theme)
-				{
-					$template->assign_block_vars('themes', [
-						'NAME'	=> $theme,
-					]);
-				}
-
-				$load_extra = [
-					'themes'	=> $themes,
-				];
-
-				$listener->set('javascript', 'oufti', $load_extra);
-
 				$this->tpl_name = 'settings';
 				$this->page_title = $language->lang(cnst::L_ACP . '_SETTINGS');
 
@@ -76,16 +45,21 @@ class main_module
 						trigger_error('FORM_INVALID');
 					}
 
+
+
 					trigger_error($language->lang(cnst::L_ACP . '_SETTING_SAVED') . adm_back_link($this->u_action));
 				}
 
-				$data = $store->get_all();
 
-				$template->assign_vars([
-					'ACP_MARTTIPHPBB_CODEMIRROR_VERSION'	=> $data['version'],
-					'ACP_MARTTIPHPBB_CODEMIRROR_THEME'		=> $data['theme'] ?? '',
 
-				]);
+				$load->select_mode('javascript');
+//				$load->all_modes();
+//				$load->all_keymaps();
+				$load->all_themes();
+
+	
+
+				$template->assign_var('CONFIG', $config);
 	
 				break;
 		}

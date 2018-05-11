@@ -25,4 +25,8 @@
     {%- endfor -%}
 {%- endfor -%}
 
+{%- if c.load.border -%}
+    {%- INCLUDECSS '@marttiphpbb_codemirror/marttiphpbb_codemirror_border.css' -%}
+{%- endif -%}
+
 {%- INCLUDEJS '@marttiphpbb_codemirror/marttiphpbb_codemirror.js' -%}
