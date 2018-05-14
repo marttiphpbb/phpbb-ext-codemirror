@@ -33,10 +33,10 @@ class main_module
 
 		switch($mode)
 		{
-			case 'settings':
+			case 'config':
 
-				$this->tpl_name = 'settings';
-				$this->page_title = $language->lang(cnst::L_ACP . '_SETTINGS');
+				$this->tpl_name = 'config';
+				$this->page_title = $language->lang(cnst::L_ACP . '_CONFIG');
 
 				if ($request->is_set_post('submit'))
 				{
@@ -47,7 +47,7 @@ class main_module
 
 
 
-					trigger_error($language->lang(cnst::L_ACP . '_SETTING_SAVED') . adm_back_link($this->u_action));
+					trigger_error($language->lang(cnst::L_ACP . '_CONFIG_SAVED') . adm_back_link($this->u_action));
 				}
 
 

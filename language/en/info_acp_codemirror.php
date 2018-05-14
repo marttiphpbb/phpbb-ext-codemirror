@@ -19,6 +19,6 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 
 	'ACP_MARTTIPHPBB_CODEMIRROR'			=> 'CodeMirror',
-	'ACP_MARTTIPHPBB_CODEMIRROR_SETTINGS'	=> 'Settings',
 	'ACP_MARTTIPHPBB_CODEMIRROR_CONFIG'		=> 'Configuration',
+	'ACP_MARTTIPHPBB_CODEMIRROR_TRY'		=> 'Try',
 ]);
