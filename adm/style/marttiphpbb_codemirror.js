@@ -42,7 +42,7 @@
                 codeMirror.setOption('keyMap', $(this).find('option:selected').text());
             });
             $('input[data-marttiphpbb-codemirror-border]').change(function(){
-                if (this.value){
+                if ($(this).val() == '1'){
                     $('div.CodeMirror').addClass('marttiphpbb-codemirror-border');
                 } else {
                     $('div.CodeMirror').removeClass('marttiphpbb-codemirror-border');

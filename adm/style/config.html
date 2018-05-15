@@ -1,0 +1,32 @@
+{%- extends '@marttiphpbb_codemirror/base.html' -%}
+
+{%- block title -%}{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_CONFIG') -}}{%- endblock -%}
+
+{%- block explain -%}
+	<p>
+		{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_CONFIG_EXPLAIN') -}}
+	</p>
+{%- endblock -%}
+
+{%- block form_content -%}
+	<fieldset>
+		{%- embed '@marttiphpbb_codemirror/include/theme_select.html' -%}
+			{%- block explain -%}
+				<br>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_THEME_EXPLAIN') -}}
+			{%- endblock explain -%}
+		{%- endembed -%}
+
+		<textarea name="config" id="config"{{- marttiphpbb_codemirror.data_attr ?? '' -}}>
+			{{- CONFIG -}}
+		</textarea>
+
+		{%- embed '@marttiphpbb_codemirror/include/yes_no_radio.html' with {'checked': marttiphpbb_codemirror.add_border} only -%}
+			{%- block data %} data-marttiphpbb-codemirror-border{%- endblock -%}
+			{%- block name -%}add_border{%- endblock -%}
+			{%- block label -%}{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_BORDER') -}}{%- endblock -%}
+			{%- block explain -%}<br>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_BORDER_EXPLAIN') -}}{%- endblock -%}
+		{%- endembed -%}
+	</fieldset>
+
+	{%- include '@marttiphpbb_codemirror/include/submit_buttons.html' -%}
+{%- endblock form_content -%}

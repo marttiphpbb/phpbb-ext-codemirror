@@ -1,0 +1,17 @@
+{%- include 'overall_header.html' -%}
+
+<h1>{%- block title -%}{%- endblock -%}</h1>
+{%- block explain -%}{%- endblock -%}
+{%- block version -%}
+	<p>
+		{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_VERSION', marttiphpbb_codemirror.version) -}}
+	</p>
+{%- endblock version -%}
+
+<form id="acp_board" method="post" action="{{- U_ACTION -}}">
+
+	{%- block form_content -%}{%- endblock -%}
+
+</form>
+
+{%- include 'overall_footer.html' -%}

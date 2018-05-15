@@ -28,6 +28,7 @@ $lang = array_merge($lang, [
 	'ACP_MARTTIPHPBB_CODEMIRROR_MODE'				=> 'Mode',
 	'ACP_MARTTIPHPBB_CODEMIRROR_KEYMAP'				=> 'Key map',
 	'ACP_MARTTIPHPBB_CODEMIRROR_BORDER'				=> 'Add border',
+	'ACP_MARTTIPHPBB_CODEMIRROR_BORDER_EXPLAIN'		=> 'Extra styling element to the CoderMirror container for light themes. (not part of the CodeMirror configuration itself).',
 //	'ACP_MARTTIPHPBB_CODEMIRROR_IDENT'				=> 'Ident',
 //	'ACP_MARTTIPHPBB_CODEMIRROR_ENABLE_LINTING'		=> 'Enable linting',
 	'ACP_MARTTIPHPBB_CODEMIRROR_CONFIG_SAVED'		=> 'The configuration was saved.',

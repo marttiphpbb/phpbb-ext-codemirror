@@ -1,15 +1,16 @@
 {%- include 'overall_header.html' -%}
 
-<h1>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_CONFIG') -}}</h1>
-<p>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_CONFIG_EXPLAIN') -}}</p>
+<h1>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_TRY') -}}</h1>
+<p>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_TRY_EXPLAIN') -}}</p>
 <p>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_VERSION', marttiphpbb_codemirror.version) -}}</p>
 
 <form id="acp_board" method="post" action="{U_ACTION}">
 	<fieldset>
-		{%- include '@marttiphpbb_codemirror/include/theme_select.html' -%}
+{#		{%- include '@marttiphpbb_codemirror/include/theme_select.html' -%} #}
+		{%- include '@marttiphpbb_codemirror/include/mode_select.html' -%}
 
 		<textarea name="config" id="config"{{- marttiphpbb_codemirror.data_attr ?? '' -}}>
-			{{- CONFIG_CONTENT -}}
+			{{- CONFIG -}}
 		</textarea>
 
 	</fieldset>

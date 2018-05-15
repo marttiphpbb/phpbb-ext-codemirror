@@ -1,8 +1,13 @@
+{%- set overwrite_explain -%}
+    {%- block explain -%}{%- endblock -%}
+{%- endset -%}
+
 {%- embed '@marttiphpbb_codemirror/include/select.html' with {
-    'type': 'mode',
     'options': marttiphpbb_codemirror.load.modes,
     'selected': marttiphpbb_codemirror.mode,
-    'label': lang('ACP_MARTTIPHPBB_CODEMIRROR_MODE')
 }
 -%}
+    {%- block name -%}mode{%- endblock -%}
+    {%- block label -%}{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_MODE') -}}{%- endblock -%}
+    {%- block explain -%}{{- overwrite_explain -}}{%- endblock -%}
 {%- endembed -%}

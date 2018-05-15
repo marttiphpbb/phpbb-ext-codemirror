@@ -56,10 +56,43 @@ class main_module
 //				$load->all_modes();
 //				$load->all_keymaps();
 				$load->all_themes();
+				$load->border();
 
 	
 
 				$template->assign_var('CONFIG', $config);
+	
+				break;
+
+			case 'try':
+
+				$this->tpl_name = 'try';
+				$this->page_title = $language->lang(cnst::L_ACP . '_TRY');
+
+
+/*				
+				if ($request->is_set_post('submit'))
+				{
+					if (!check_form_key(cnst::FOLDER))
+					{
+						trigger_error('FORM_INVALID');
+					}
+
+
+
+					trigger_error($language->lang(cnst::L_ACP . '_CONFIG_SAVED') . adm_back_link($this->u_action));
+				}
+*/
+
+
+				$load->select_mode('javascript');
+//				$load->all_modes();
+//				$load->all_keymaps();
+//				$load->all_themes();
+
+	
+
+//				$template->assign_var('CONTENT', $config);
 	
 				break;
 		}

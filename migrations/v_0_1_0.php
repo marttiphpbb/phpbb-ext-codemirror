@@ -16,8 +16,11 @@ class v_0_1_0 extends \phpbb\db\migration\migration
 		$package_json = file_get_contents(__DIR__ . '/../codemirror/package.json');
 		$version = json_decode($package_json, true)['version'];
 
+		$default_config_json = file_get_contents(__DIR__ . '/../default_config.json');
+
 		$data = [
 			'version'	=> $version,
+			'config'	=> $default_config_json,
 		];
 
 		return [

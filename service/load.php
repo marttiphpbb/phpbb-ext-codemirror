@@ -43,6 +43,7 @@ class load
 	private $theme;
 	private $keymap_keys = [];
 	private $keymap;
+	private $border = false;
 
 	public function __construct(
 		config $config,
@@ -74,6 +75,7 @@ class load
 			'themes' 	=> array_keys($this->theme_keys),
 			'modes'		=> array_keys($this->mode_keys),
 			'keymaps' 	=> array_keys($this->keymap_keys),
+			'border'	=> $this->border,
 		];
 
 		return [
@@ -184,5 +186,10 @@ class load
 	public function history_id(string $history_id)
 	{
 		$this->history_id = $history_id;
+	}
+
+	public function border()
+	{
+		$this->border = true;
 	}
 }
