@@ -1,9 +1,9 @@
 {
     "lineNumbers": true,
-    "indentWithTabs": true,
+    "indentWithTabs": false,
     "extraKeys": {
-        "F11": {"function": "toggleFullScreen"},
-        "Esc": {"function": "leaveFullScreen"}
+      "F11": "marttiphpbbToggleFullScreen",
+      "Esc": "marttiphpbbExitFullScreen"
     },
     "matchBrackets": true,
     "autoCloseBrackets": true,

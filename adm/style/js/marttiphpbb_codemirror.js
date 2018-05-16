@@ -1,7 +1,6 @@
 ;(function($, window, document) {
 	$('document').ready(function () {
         const storagePrefix = 'marttiphpb_codemirror_';
-        $('span[data-marttiphpbb-codemirror-version]').text(CodeMirror.version);
         var $textarea = $('textarea[data-marttiphpbb-codemirror]')[0];
         if ($textarea){
             var data = $($textarea).data('marttiphpbb-codemirror');

@@ -26,5 +26,10 @@ class config
 		$this->store = $store;	
 	}
 
+	public function get_version():string 
+	{
+		return $this->store->get('version');
+	}
+
 
 }

@@ -14,17 +14,19 @@
     {%- INCLUDEJS c.path~'keymap/'~keymap~'.js'~c.version_param -%}
 {%- endfor -%}
 
-{%- for addon in c.load.addons -%}
-    {%- for css in addon.css -%}
-        {%- INCLUDECSS c.path~'addon/'~addon.name~'/'~css~'.css'~c.version_param -%}
-    {%- endfor -%}
-    {%- for js in addon.js -%}
-        {%- INCLUDEJS c.path~'addon/'~addon.name~'/'~js~'.js'~c.version_param -%}
-    {%- endfor -%}
+{%- for addon, filetypes in c.load.addons -%}
+    {%- if 'css' in filetypes -%}
+        {%- INCLUDECSS c.path~'addon/'~addon~'.css'~c.version_param -%}
+    {%- endif -%}
+    {%- if 'js' in filetypes -%}
+        {%- INCLUDEJS c.path~'addon/'~addon~'.js'~c.version_param -%}
+    {%- endif -%}
 {%- endfor -%}
 
 {%- if c.load.border -%}
-    {%- INCLUDECSS '@marttiphpbb_codemirror/marttiphpbb_codemirror_border.css' -%}
+    {%- INCLUDECSS '@marttiphpbb_codemirror/css/marttiphpbb_codemirror_border.css' -%}
 {%- endif -%}
 
-{%- INCLUDEJS '@marttiphpbb_codemirror/marttiphpbb_codemirror.js' -%}
+{%- INCLUDEJS '@marttiphpbb_codemirror/js/marttiphpbb_codemirror_commands.js' -%}
+{%- INCLUDEJS '@marttiphpbb_codemirror/js/marttiphpbb_codemirror.js' -%}
+

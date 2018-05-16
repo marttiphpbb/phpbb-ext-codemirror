@@ -41,6 +41,22 @@ class load
 		'rulers'				=> 'display/rulers.js',
 	];
 
+	CONST FILES = [
+		'addon'	=> [
+			'display'	=> [
+				'fullscreen' => ['js', 'css'],
+			]
+		]
+	];
+
+	CONST FROM_COMMANDS = [
+		'marttiphpbbToggleFullScreen'	=> 'addon/display/fullscreen',
+		'marttiphpbbExitFullScreen'		=> 'addon/display/fullscreen',
+
+
+
+	];
+
 	/** @var config */
 	private $config;
 
@@ -85,10 +101,15 @@ class load
 			return [];
 		}
 
+		$version = $this->config->get_version();
+
 		$load = [
 			'themes' 	=> array_keys($this->theme_keys),
 			'modes'		=> array_keys($this->mode_keys),
 			'keymaps' 	=> array_keys($this->keymap_keys),
+			'addons'	=> [
+				'display/fullscreen' => ['css', 'js'],		
+			],
 			'border'	=> $this->border,
 		];
 
@@ -101,7 +122,7 @@ class load
 			'path'				=> $this->get_path(),
 			'load'				=> $load,
 		];	
-	}
+	}	
 
 	public function get_data_attr():string 
 	{
@@ -109,7 +130,11 @@ class load
 			'config' => [
 				'lineNumbers' 	=> true,
 				'matchBrackets' => true,
-				'theme'			=> $this->theme ?? 'erlang-dark',
+				'extraKeys'		=> [
+					'F11'	=> "marttiphpbbToggleFullScreen",
+					'Esc'	=> "marttiphpbbExitFullScreen"
+				],
+				'theme'			=> $this->theme ?? 'night',
 				'mode'			=> $this->mode,
 			],
 			'historyId'	=> 'aaaa',
