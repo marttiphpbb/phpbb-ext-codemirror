@@ -1,9 +1,7 @@
 {%- INCLUDECSS c.path~'lib/codemirror.css'~c.version_param -%}
 
 {%- for theme in c.load.themes -%}
-    {%- if theme != 'default' -%}
-        {%- INCLUDECSS c.path~'theme/'~theme~'.css'~c.version_param -%}
-    {%- endif -%}
+    {%- INCLUDECSS c.path~'theme/'~theme~'.css'~c.version_param -%}
 {%- endfor -%}
 
 {%- INCLUDEJS c.path~'lib/codemirror.js'~c.version_param -%}

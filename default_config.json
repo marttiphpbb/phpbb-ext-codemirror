@@ -1,3 +1,16 @@
 {
-
+    "lineNumbers": true,
+    "indentWithTabs": true,
+    "extraKeys": {
+        "F11": {"function": "toggleFullScreen"},
+        "Esc": {"function": "leaveFullScreen"}
+    },
+    "matchBrackets": true,
+    "autoCloseBrackets": true,
+    "matchTags": true,
+    "showTrailingSpace": true,
+    "autoCloseTags": true,
+    "newlineAndIndentContinueMarkdownList": true,
+    "foldGutter": true,
+    "styleActiveLine": true
 }

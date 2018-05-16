@@ -25,6 +25,22 @@ class load
 		'border' => true,
 	];
 
+	const ADDON_OPTIONS = [
+		'matchBrackets' 		=> 'edit/matchbrackets.js',
+		'autoCloseBrackets'		=> 'edit/closebrackets.js',
+		'matchTags'				=> 'edit/matchtags.js',
+		'showTrailingSpace'		=> 'edit/trailingspace.js',
+		'autoCloseTags'			=> 'edit/closetag.js',
+		'newlineAndIndentContinueMarkdownList'	=> 'edit/continuelist.js',
+		'foldGutter'			=> ['fold/foldgutter.js', 'fold/foldgutter.css'],
+		'styleActiveLine'		=> 'selection/active-line.js',
+		'continueComments'		=> 'comment/continuecomment.js',
+		'placeholder'			=> 'display/placeholder.js',
+		'fullScreen'			=> ['display/fullscreen.js', 'display/fullscreen.css'],
+		'scrollbarStyle'		=> ['scroll/simplescrollbars.js', 'scroll/simplescrollbars.css'],
+		'rulers'				=> 'display/rulers.js',
+	];
+
 	/** @var config */
 	private $config;
 
@@ -68,8 +84,6 @@ class load
 		{
 			return [];
 		}
-
-		$version = '5.37.0';
 
 		$load = [
 			'themes' 	=> array_keys($this->theme_keys),

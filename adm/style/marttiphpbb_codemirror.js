@@ -1,10 +1,11 @@
 ;(function($, window, document) {
 	$('document').ready(function () {
         const storagePrefix = 'marttiphpb_codemirror_';
+        $('span[data-marttiphpbb-codemirror-version]').text(CodeMirror.version);
         var $textarea = $('textarea[data-marttiphpbb-codemirror]')[0];
         if ($textarea){
             var data = $($textarea).data('marttiphpbb-codemirror');
-            var codeMirror = CodeMirror.fromTextArea($textarea, data.config); 
+            var codeMirror = CodeMirror.fromTextArea($textarea, data.config);           
             var $form = $textarea.closest('form');
             if ($form && data.historyId){
                 function hash32(str){
@@ -47,7 +48,15 @@
                 } else {
                     $('div.CodeMirror').removeClass('marttiphpbb-codemirror-border');
                 }
-            });         
+            });
+            CodeMirror.prototype.toggleFullScreen = function(){
+                this.setOption("fullScreen", !this.getOption("fullScreen"));
+            };
+            CodeMirror.prototype.leaveFullScreen = function(){
+                if (this.getOption("fullScreen")){
+                    this.setOption("fullScreen", true);
+                }
+            };       
             window.marttiphpbbCodeMirror = codeMirror;
         }
 	});
