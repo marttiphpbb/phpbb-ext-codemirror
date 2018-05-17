@@ -132,7 +132,8 @@ class load
 				'matchBrackets' => true,
 				'extraKeys'		=> [
 					'F11'	=> "marttiphpbbToggleFullScreen",
-					'Esc'	=> "marttiphpbbExitFullScreen"
+					'Esc'	=> "marttiphpbbExitFullScreen",
+					'Ctrl-Alt-B'	=> "marttiphpbbToggleBorder"
 				],
 				'theme'			=> $this->theme ?? 'night',
 				'mode'			=> $this->mode,

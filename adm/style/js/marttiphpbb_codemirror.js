@@ -43,19 +43,11 @@
             });
             $('input[data-marttiphpbb-codemirror-border]').change(function(){
                 if ($(this).val() == '1'){
-                    $('div.CodeMirror').addClass('marttiphpbb-codemirror-border');
+                    codeMirror.setOption('marttiphpbbBorderEnabled', true);
                 } else {
-                    $('div.CodeMirror').removeClass('marttiphpbb-codemirror-border');
+                    codeMirror.setOption('marttiphpbbBorderEnabled', false);
                 }
-            });
-            CodeMirror.prototype.toggleFullScreen = function(){
-                this.setOption("fullScreen", !this.getOption("fullScreen"));
-            };
-            CodeMirror.prototype.leaveFullScreen = function(){
-                if (this.getOption("fullScreen")){
-                    this.setOption("fullScreen", true);
-                }
-            };       
+            });      
             window.marttiphpbbCodeMirror = codeMirror;
         }
 	});
