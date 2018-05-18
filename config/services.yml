@@ -1,4 +1,10 @@
 services:
+    marttiphpbb.codemirror.console.extract:
+        class: marttiphpbb\codemirror\console\extract
+        arguments:
+            - '@user'
+        tags:
+            - { name: console.command }
     marttiphpbb.codemirror.store:
         class: marttiphpbb\codemirror\service\store
         arguments:

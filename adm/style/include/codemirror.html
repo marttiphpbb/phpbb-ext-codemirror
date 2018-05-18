@@ -1,34 +1,26 @@
-{%- INCLUDECSS c.path~'lib/codemirror.css'~c.version_param -%}
-
-{%- for theme in c.load.themes -%}
-    {%- INCLUDECSS c.path~'theme/'~theme~'.css'~c.version_param -%}
-{%- endfor -%}
-
-{%- INCLUDEJS c.path~'lib/codemirror.js'~c.version_param -%}
-
-{%- for mode in c.load.modes -%}
-    {%- INCLUDEJS c.path~'mode/'~mode~'/'~mode~'.js'~c.version_param -%}
-{%- endfor -%}
-
-{%- for keymap in c.load.keymaps -%}
-    {%- INCLUDEJS c.path~'keymap/'~keymap~'.js'~c.version_param -%}
-{%- endfor -%}
-
-{%- for addon, filetypes in c.load.addons -%}
-    {%- if 'css' in filetypes -%}
-        {%- INCLUDECSS c.path~'addon/'~addon~'.css'~c.version_param -%}
-    {%- endif -%}
-    {%- if 'js' in filetypes -%}
-        {%- INCLUDEJS c.path~'addon/'~addon~'.js'~c.version_param -%}
+{%- for f in c.load.cm -%}
+    {%- if f|split('.')|last == 'css' -%}
+        {%- INCLUDECSS c.cm_path~'/'~f~c.cm_version_param -%}
+    {%- else -%}
+        {%- INCLUDEJS c.cm_path~'/'~f~c.cm_version_param -%}
     {%- endif -%}
 {%- endfor -%}
 
-{%- if c.load.border -%}
-    {%- INCLUDECSS '@marttiphpbb_codemirror/css/marttiphpbb_codemirror_border.css' -%}
-{%- endif -%}
+{%- for f in c.load.ext -%}
+    {%- if f|split('.')|last == 'css' -%}
+        {%- INCLUDECSS '@marttiphpbb_codemirror/'~f -%}
+    {%- else -%}
+        {%- INCLUDEJS '@marttiphpbb_codemirror/'~f -%}
+    {%- endif -%}
+{%- endfor -%}
 
-{%- INCLUDEJS '@marttiphpbb_codemirror/addon/border.js' -%}
-{%- INCLUDEJS '@marttiphpbb_codemirror/addon/fullscreen.js' -%}
+{%- for f in c.load.custom -%}
+    {%- if f|split('.')|last == 'css' -%}
+        {%- INCLUDECSS f -%}
+    {%- else -%}
+        {%- INCLUDEJS f -%}
+    {%- endif -%}
+{%- endfor -%}
 
 {%- INCLUDEJS '@marttiphpbb_codemirror/js/marttiphpbb_codemirror.js' -%}
 

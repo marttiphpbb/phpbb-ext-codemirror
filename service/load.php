@@ -16,45 +16,124 @@ use marttiphpbb\codemirror\util\cnst;
 
 class load
 {
-	const DEFAULT = [
-		'config' => [
-			'lineNumbers'	=> true,
-			'matchBrackets'	=> true,
-			'theme'			=> 'erlang-dark',
+	const MODE_SHORT = [
+		'scss'			=> 'text/x-scss',
+		'less'			=> 'text/x-less',
+		'html'			=> 'text/html',
+		'json'			=> 'application/json',
+	];
+
+	const MODE_DEP = [
+		'dart'				=> 'clike',
+		'django'			=> 'htmlmixed',
+		'gfm'				=> 'markdown',
+		'haml'				=> ['htmlmixed', 'ruby'],
+		'haskel-literate'	=> 'haskel',
+		'htmlembedded'		=> 'htmlmixed',
+		'htmlmixed'			=> ['xml', 'javascript', 'css'],
+		'jsx'				=> ['xml', 'javascript'],
+		'markdown'			=> 'xml',
+		'pegjs'				=> 'javascript',
+		'php'				=> ['htmlmixed', 'clike'],
+		'pug'				=> ['javascript', 'css', 'htmlmixed'],
+		'rst'				=> ['python', 'stex'],
+		'sass'				=> 'css',
+		'slim'				=> ['htmlmixed', 'ruby'],
+		'soy'				=> 'htmlmixed',
+		'tornado'			=> 'htmlmixed',
+		'vue'				=> ['xml', 'javascript', 'coffeescript', 'css', 'stylus', 'pug', 'handlebars'],
+		'yaml-frontmatter'	=> 'yaml',
+	];
+
+	const MODE_ADDON_DEP = [
+		'django'		=> 'mode/overlay',
+		'dockerfile'	=> 'mode/simple',
+		'factor'		=> 'mode/simple',
+		'gfm'			=> 'mode/overlay',
+		'handlebars'	=> ['mode/simple', 'mode/multiplex'],
+		'htmlembedded'	=> 'mode/multiplex',
+		'nsis'			=> 'mode/simple',
+		'rst'			=> 'mode/overlay',
+		'rust'			=> 'mode/simple',
+		'tornado'		=> 'mode/overlay',
+		'twig'			=> 'mode/multiplex',
+		'vue'			=> 'mode/overlay',
+	];
+
+	const MODE_DEP_META = [
+		'markdown'		=> true,
+	];
+
+	const ADDON_CSS = [
+		'dialog/dialog'				=> true,
+		'display/fullscreen'		=> true,
+		'fold/foldgutter'			=> true,
+		'hint/showhint'				=> true,
+		'lint/lint'					=> true,
+		'merge/merge'				=> true,
+		'scroll/simplescrollbars'	=> true,
+		'search/matchesonscrollbar'	=> true,
+		'tern/tern'					=> true,
+	];
+
+	const ADDON_DEP = [
+		'edit/closetag'				=> 'fold/xml-fold',
+		'edit/matchtags'			=> 'fold/xml-fold',
+		'fold/foldgutter'			=> 'fold/foldcode',
+		'hint/html-hint'			=> 'hint/xml-hint',
+		'runmode/colorize'			=> 'runmode/runmode',
+		'search/jump-to-line'		=> 'dialog/dialog',
+		'search/match-highlighter'	=> 'search/matchonscrollbar',
+		'search/matchesonscrollbar'	=> ['scroll/annotatescrollbar', 'scroll/simplescrollbars', 'search/searchcursor'],
+		'search/search'				=> ['search/searchcursor', 'dialog/dialog'],
+	];
+
+	const ADDON_MODE_DEP = [
+		'hint/css-hint'		=> 'css',
+		'hint/sql-hint'		=> 'sql',
+	];
+
+	const ADDON_DEP_EXTRA = [
+		'lint/html-lint'	=> 'htmllint',
+		'merge/merge'		=> 'diff_match_patch',
+	];
+
+	const KEYMAP_ADDON_DEP = [
+		'sublime'	=> ['search/searchcursor', 'edit/matchbrackets'],
+		'vim'		=> ['search/searchcursor', 'edit/matchbrackets', 'dialog/dialog'],
+	];
+
+	const EXT_ADDON_DEP = [
+		'fullscreen'	=> [
+			'display/fullscreen'
 		],
-		'border' => true,
+		''
 	];
 
-	const ADDON_OPTIONS = [
-		'matchBrackets' 		=> 'edit/matchbrackets.js',
-		'autoCloseBrackets'		=> 'edit/closebrackets.js',
-		'matchTags'				=> 'edit/matchtags.js',
-		'showTrailingSpace'		=> 'edit/trailingspace.js',
-		'autoCloseTags'			=> 'edit/closetag.js',
-		'newlineAndIndentContinueMarkdownList'	=> 'edit/continuelist.js',
-		'foldGutter'			=> ['fold/foldgutter.js', 'fold/foldgutter.css'],
-		'styleActiveLine'		=> 'selection/active-line.js',
-		'continueComments'		=> 'comment/continuecomment.js',
-		'placeholder'			=> 'display/placeholder.js',
-		'fullScreen'			=> ['display/fullscreen.js', 'display/fullscreen.css'],
-		'scrollbarStyle'		=> ['scroll/simplescrollbars.js', 'scroll/simplescrollbars.css'],
-		'rulers'				=> 'display/rulers.js',
+	const COMMAND_ADDON = [
+		'',
+		'jumpToLine'		=> 'search/jump-to-line',
 	];
 
-	CONST FILES = [
-		'addon'	=> [
-			'display'	=> [
-				'fullscreen' => ['js', 'css'],
-			]
-		]
+	const OPTION_ADDON_DEP = [
+		'matchBrackets' 		=> 'edit/matchbrackets',
+		'autoCloseBrackets'		=> 'edit/closebrackets',
+		'matchTags'				=> 'edit/matchtags',
+		'showTrailingSpace'		=> 'edit/trailingspace',
+		'autoCloseTags'			=> 'edit/closetag',
+		'newlineAndIndentContinueMarkdownList'	=> 'edit/continuelist',
+		'foldGutter'			=> 'fold/foldgutter',
+		'styleActiveLine'		=> 'selection/active-line',
+		'continueComments'		=> 'comment/continuecomment',
+		'placeholder'			=> 'display/placeholder',
+		'fullScreen'			=> 'display/fullscreen',
+		'scrollbarStyle'		=> 'scroll/simplescrollbars',
+		'rulers'				=> 'display/rulers',
 	];
 
 	CONST FROM_COMMANDS = [
 		'marttiphpbbToggleFullScreen'	=> 'addon/display/fullscreen',
 		'marttiphpbbExitFullScreen'		=> 'addon/display/fullscreen',
-
-
-
 	];
 
 	/** @var config */
@@ -75,7 +154,14 @@ class load
 	private $theme;
 	private $keymap_keys = [];
 	private $keymap;
-	private $border = false;
+	private $addon_keys = [];
+
+	private $cm_keys = [
+		'lib/codemirror.css'	=> true,
+		'lib/codemirror.js'		=> true,
+	];
+	private $ext_keys = [];
+	private $custom_keys = [];
 
 	public function __construct(
 		config $config,
@@ -104,22 +190,22 @@ class load
 		$version = $this->config->get_version();
 
 		$load = [
+			'cm'		=> array_keys($this->cm_keys),
+			'ext'		=> array_keys($this->ext_keys),
+			'custom'	=> array_keys($this->custom_keys),
 			'themes' 	=> array_keys($this->theme_keys),
 			'modes'		=> array_keys($this->mode_keys),
 			'keymaps' 	=> array_keys($this->keymap_keys),
-			'addons'	=> [
-				'display/fullscreen' => ['css', 'js'],		
-			],
-			'border'	=> $this->border,
+			'addons'	=> array_keys($this->addon_keys),
 		];
 
 		return [
 			'mode'				=> $this->mode,
 			'theme'				=> $this->theme,
 			'data_attr'			=> $this->get_data_attr(),
-			'version_param'		=> '?v=' . $version,
-			'version'			=> $version,
-			'path'				=> $this->get_path(),
+			'cm_version_param'	=> '?v=' . $version,
+			'cm_version'		=> $version,
+			'cm_path'			=> $this->get_cm_path(),
 			'load'				=> $load,
 		];	
 	}	
@@ -146,7 +232,7 @@ class load
 		return sprintf($data_attr, $data);
 	}
 
-	public function get_path():string 
+	public function get_cm_path():string 
 	{
 		return $this->ext_root_path . cnst::CODEMIRROR_DIR;
 	}
@@ -173,6 +259,7 @@ class load
 	public function keymap(string $keymap)
 	{
 		$this->keymap_keys[$keymap] = true;
+		$this->cm_keys['keymap/' . $keymap . '.js'] = true;
 	}
 
 	public function select_mode(string $mode)
@@ -197,6 +284,7 @@ class load
 	public function mode(string $mode)
 	{
 		$this->mode_keys[$mode] = true;
+		$this->cm_keys['mode/' . $mode . '/' . $mode . '.js'] = true;
 	}
 
 	public function select_theme(string $theme)
@@ -220,7 +308,27 @@ class load
 
 	public function theme(string $theme)
 	{
-		$this->theme_keys[$theme] = true;		
+		$this->theme_keys[$theme] = true;
+		$this->cm_keys['theme/' . $theme . '.css'] = true;		
+	}
+
+	public function addons(array $addons)
+	{
+		foreach($addons as $addon)
+		{
+			$this->addon($addon);
+		}
+	}
+
+	public function addon(string $addon)
+	{
+		$this->addon_keys[$addon] = true;
+		$this->cm_keys['addon/' . $addon . '.js'] = true;
+
+		if (isset(self::ADDON_CSS[$addon]))
+		{
+			$this->cm_keys['addon/' . $addon . '.css'] = true;
+		}
 	}
 
 	public function history_id(string $history_id)

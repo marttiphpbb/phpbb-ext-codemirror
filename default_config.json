@@ -3,7 +3,8 @@
     "indentWithTabs": false,
     "extraKeys": {
       "F11": "marttiphpbbToggleFullScreen",
-      "Esc": "marttiphpbbExitFullScreen"
+      "Esc": "marttiphpbbDisableFullScreen",
+      "Ctrl-Alt-B": "marttiphpbbToggleBorder"
     },
     "matchBrackets": true,
     "autoCloseBrackets": true,
