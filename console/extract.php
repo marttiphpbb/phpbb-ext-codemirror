@@ -9,6 +9,7 @@ namespace marttiphpbb\codemirror\console;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Finder\Finder;
@@ -34,31 +35,26 @@ namespace marttiphpbb\codemirror\util;
 class dependencies
 {
 	// lib/codemirror is omitted from this list as it is required by all.
-	const REQUIRE = [
-%require_ary%
-	];
+	const FILES = [
+%c_files%];
 
 	const CSS = [
-%css_ary%
-	];
+%c_css%];
 
-	const COMMANDS_FILES = [
-%command_ary%
-	];
+	const COMMANDS = [
+%c_commands%];
 
-	const OPTIONS_FILES = [
-%option_ary%
-	];
+	const OPTIONS = [
+%c_options%];
 
-	const DEFAULT_OPTIONS = [
-%default_options%
-	];
+	const USE_OPTIONS = [
+%c_use_options%];
 
-	const METHODS_FILES = [
+	const CORE_COMMANDS = [
+%c_core_commands%];
 
-	];
-
-
+	const DEFAULT_KEYMAP = [
+%c_default_keymap%];
 }
 EOT;
 
@@ -70,13 +66,24 @@ EOT;
 	];
 
 	const COMMAND_TAG = [
-		['CodeMirror.commands.', '= function('],
+		['.commands.', '= function('],
 		['cmds.', '= function('],
+	];
+
+	const CORE_COMMAND_TAG = [
+		['  ', ': '],
 	];
 
 	const OPTION_TAG = [
 		['.defineOption("', '",'],
 		['.defineOption(\'', '\','],
+	];
+
+	const USE_OPTION_TAG = [
+		['.setOption("', '",'],
+		['.setOption(\'', '\''],
+		['.getOption("', '")'],
+		['.getOption(\'', '\')'],
 	];
 
 	public function __construct(user $user)
@@ -93,6 +100,7 @@ EOT;
 			->setName('ext-codemirror:extract')
 			->setDescription('For Development: Extract dependency data from CodeMirror repo and own javascript files.')
 			->setHelp('This command was created for the development of the marttiphpbb-codemirror extension.')
+			->addOption('write', 'w', InputOption::VALUE_NONE, 'Write the util/dependencies.php file')
 		;
 	}
 
@@ -109,7 +117,9 @@ EOT;
 		$output->getFormatter()->setStyle('v', $outputStyle);
 
 		$outputStyle = new OutputFormatterStyle('yellow', 'default', ['bold']);
-		$output->getFormatter()->setStyle('l', $outputStyle);		
+		$output->getFormatter()->setStyle('l', $outputStyle);
+
+		$write = $input->getOption('write');		
 
 		$io->writeln([
 			'',
@@ -118,12 +128,20 @@ EOT;
 		]);
 
 		$file_dep_ary = $option_dep_ary = $command_dep_ary = [];
+		$core_command_ary = $default_keymap_ary = $default_keymap_lines = [];
 		$require_count = 0;
+		$core_commands_open = $default_keymap_open = false;
 
 		$dir = self::EXT_ROOT_PATH . 'codemirror';
 
 		$finder = new Finder();
-		$files = $finder->files()->in($dir)->exclude(['src', 'component-tools'])->sortByName();
+		$files = $finder
+			->files()
+			->in($dir)
+			->exclude(['src', 'component-tools'])
+			->ignoreVCS(true)
+			->ignoreDotFiles(true)
+			->sortByName();
 
 		$files = iterator_to_array($files);
 
@@ -133,6 +151,10 @@ EOT;
 			'<l>File Deps</>',
 			'<l>---------</>',
 		]);
+
+		$c_files = $c_options = $c_commands = $c_css = '';
+		$c_use_options = $c_core_commands = '';
+		$c_default_keymap = '';
 
 		foreach ($files as $file)
 		{
@@ -148,6 +170,7 @@ EOT;
 					$require_ary = $this->get_require($line);
 					$option_ary = $this->get_option($line);
 					$command_ary = $this->get_command($line);
+					$use_option_ary = $this->get_use_option($line);
 
 					if ($require_ary)
 					{
@@ -169,19 +192,79 @@ EOT;
 					if ($option_ary)
 					{
 						foreach ($option_ary as $option)
-						{
-							$option_count++;		
+						{		
 							$option_dep_ary[$option] = $loc;
+						}
+					}
+
+					if ($use_option_ary)
+					{
+						foreach ($use_option_ary as $use_option)
+						{		
+							$use_option_dep_ary[$loc][$use_option] = true;
 						}
 					}
 
 					if ($command_ary)
 					{
 						foreach ($command_ary as $command)
-						{
-							$command_count++;		
+						{		
+							$command = trim($command);
 							$command_dep_ary[$command] = $loc;
 						}
+					}
+
+					if ($loc !== 'lib/codemirror' || $ext !== 'js')
+					{
+						continue;
+					}
+
+					if (strpos($line, 'var commands = {') === 0)
+					{
+						$core_commands_open = true;
+					}
+
+					if (strpos($line, '};') === 0)
+					{
+						$core_commands_open = false;
+					}
+
+					if ($core_commands_open)
+					{
+						$command = $this->get_tagged_content_ary($line, self::CORE_COMMAND_TAG);
+						$command = $command ? $command[0] : '';
+
+						if (!$command || trim($command) !== $command || !ctype_alpha($command))
+						{
+							continue;
+						}
+
+						$core_command_ary[] = $command;
+						$c_core_commands .= $this->get_c_key_value_line($command, 'true');		
+
+						continue;
+					}
+
+					if (strpos($line, 'keyMap.') === 0)
+					{
+						$default_keymap_open = true;
+						continue;
+					}
+
+					if (strpos($line, '};') === 0)
+					{
+						$default_keymap_open = false;
+					}
+
+					if ($default_keymap_open)
+					{
+						if (strpos($line, 'fallthrough:') !== false)
+						{
+							continue;
+						}
+
+						$default_keymap_lines[] = trim($line);
+						continue;
 					}
 				}
 
@@ -190,7 +273,7 @@ EOT;
 				if (count($loc_require_ary))
 				{
 					$require_str = '[\'' . implode('\', \'', $loc_require_ary) . '\']';
-					$file_dep_ary[$loc]['require'] = $require_str;
+					$c_files .= $this->get_c_key_value_line($loc, $require_str);
 					$io->writeln('<info>Loc: </>' . $loc. ' <info>Dep:</> <v>' . $require_str . '</>');
 				}
 			}
@@ -199,30 +282,78 @@ EOT;
 		$io->writeln([
 			'Dep count:' . $require_count,
 			'',
+		]);
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
 			'<l>Option deps:</>',
 			'<l>------------</>',
 		]);
 
 		foreach ($option_dep_ary as $option => $loc)
 		{
+			$c_options .= $this->get_c_key_value_line($option, $loc);
 			$io->writeln('<info>Option: </>' . $option . '<info> Loc: </><v>' . $loc . '</>');
 		}
 
 		$io->writeln([
 			'Option count: ' . count($option_dep_ary),
 			'',
+		]);
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>Use option deps:</>',
+			'<l>----------------</>',
+		]);	
+		
+		$use_option_count = 0;
+
+		foreach ($use_option_dep_ary as $loc => $use_options_keys)
+		{
+			$use_options = array_keys($use_options_keys);
+			$use_option_str = '[\'' . implode('\', \'', $use_options) . '\']';
+			$c_use_options .= $this->get_c_key_value_line($loc, $use_option_str);
+			$io->writeln('<info>Loc: </>' . $loc . '<info> Options: </><v>' . $use_option_str . '</>');
+			$use_option_count += count($use_options);
+		}
+
+		$io->writeln([
+			'Use option count: ' . $use_option_count,
+			'',
+		]);
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
 			'<l>Command deps:</>',
 			'<l>------------</>',
-		]);		
+		]);
 
 		foreach ($command_dep_ary as $command => $loc)
 		{
+			$c_commands .= $this->get_c_key_value_line($command, $loc);
 			$io->writeln('<info>Command: </>' . $command . '<info> Loc: </><v>' . $loc . '</>');
 		}
 
 		$io->writeln([
 			'Command count: ' . count($command_dep_ary),
 			'',
+		]);
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
 			'<l>Has CSS:</>',
 			'<l>--------</>',			
 		]);
@@ -233,6 +364,7 @@ EOT;
 		{
 			if ($ary['js'] && $ary['css'])
 			{
+				$c_css .= $this->get_c_key_value_line($loc, 'true');
 				$io->writeln('<v>' . $loc . '</>');
 				$css_count++;
 			}
@@ -240,8 +372,77 @@ EOT;
 		$io->writeln([
 			'CSS count: ' . $css_count,
 			'',			
-		]);		
+		]);
 
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>Core commands:</>',
+			'<l>--------------</>',	
+		]);
+
+		foreach ($core_command_ary as $command)
+		{
+			$c_core_commands .= $this->get_c_key_value_line($command, 'true');
+			$io->writeln('<v>' . $command . '</>');
+		}
+		$io->writeln([
+			'Core command count: ' . count($core_command_ary),
+			'',			
+		]);
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>Default keymap:</>',
+			'<l>---------------</>',	
+		]);
+
+		foreach ($default_keymap_lines as $line)
+		{
+			$line = rtrim($line, ',');
+			$key_ary = json_decode('{' . $line . '}', true);
+			$default_keymap_ary = array_merge($key_ary, $default_keymap_ary);		
+		}
+
+		foreach ($default_keymap_ary as $key => $command)
+		{
+			$c_default_keymap .= $this->get_c_key_value_line($key, $command);
+			$io->writeln('<info>Key: </>' . $key . ' <info>Command: </><v>' . $command . '</>');
+		}
+
+		$io->writeln([
+			'Default keymap count: ' . count($default_keymap_ary),
+			'',			
+		]);
+
+		/**
+		 * 
+		 */
+
+		if ($write)
+		{
+			$search = ['%c_files%', '%c_css%', '%c_options%', 
+				'%c_commands%', '%c_use_options%',
+				'%c_core_commands%', '%c_default_keymap%',
+			];
+			$replace = [$c_files . "\t", $c_css . "\t", $c_options . "\t", 
+				$c_commands . "\t", $c_use_options . "\t",
+				$c_core_commands . "\t", $c_default_keymap . "\t",
+			];
+			$tpl = str_replace($search, $replace, self::TEMPLATE_FILE);
+
+			file_put_contents(self::FILE, $tpl);
+
+			$io->writeln([
+				'<l>File written: marttiphpbb/codemirror/util/dependencies.php</>',
+				'',			
+			]);
+		}
 	}
 
 	private function sanitize_path(string $path, string $loc):string 
@@ -267,6 +468,12 @@ EOT;
 		return implode('/', $loc);
 	}
 
+	private function get_c_key_value_line(string $key, string $value):string 
+	{
+		$value = (strpos($value, '[') === 0 || in_array($value, ['true', 'false'])) ? $value : '\'' . $value . '\'';
+		return "\t\t'" . $key . "' => " . $value . ",\n";
+	}
+
 	private function get_require(string $line):array
 	{
 		return $this->get_tagged_content_ary($line, self::REQUIRE_TAG);
@@ -275,6 +482,11 @@ EOT;
 	private function get_option(string $line):array
 	{
 		return $this->get_tagged_content_ary($line, self::OPTION_TAG);
+	}
+
+	private function get_use_option(string $line):array
+	{
+		return $this->get_tagged_content_ary($line, self::USE_OPTION_TAG);
 	}
 
 	private function get_command(string $line):array
