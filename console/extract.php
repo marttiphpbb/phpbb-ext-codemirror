@@ -56,6 +56,15 @@ class dependencies
 	const DEFAULT_KEYMAP = [
 %c_default_keymap%];
 
+	const MODES = [
+%c_modes%];
+
+	const KEYMAPS = [
+%c_keymaps%];
+
+	const THEMES = [
+%c_themes%];
+
 	const EXT_CSS = [
 %c_ext_css%];
 
@@ -142,6 +151,7 @@ EOT;
 		$file_dep_ary = $option_dep_ary = $command_dep_ary = [];
 		$use_option_dep_ary = [];
 		$core_command_ary = $default_keymap_ary = $default_keymap_lines = [];
+		$mode_ary = $keymap_ary = $theme_ary = [];
 		$require_count = 0;
 		$core_commands_open = $default_keymap_open = false;
 
@@ -186,6 +196,7 @@ EOT;
 		$c_files = $c_options = $c_commands = $c_css = '';
 		$c_use_options = $c_core_commands = '';
 		$c_default_keymap = '';
+		$c_modes = $c_keymaps = $c_themes = '';
 		$c_ext_css = '';
 		$c_ext_options = $c_ext_use_options = $c_ext_commands = '';
 
@@ -193,8 +204,24 @@ EOT;
 		{
 			$rel_path = $file->getRelativePathname();
 			list($loc, $ext) = explode('.', $rel_path);
+			$loc_parts = explode('/', $loc);			
 			$file_dep_ary[$loc][$ext] = true;
 			$loc_require_ary = [];
+
+			if ($loc_parts[0] === 'mode' && $ext === 'js')
+			{
+				$mode_ary[end($loc_parts)] = $loc;
+			}
+
+			if ($loc_parts[0] === 'keymap' && $ext === 'js')
+			{
+				$keymap_ary[end($loc_parts)] = $loc;
+			}
+			
+			if ($loc_parts[0] === 'theme' && $ext === 'css')
+			{
+				$theme_ary[end($loc_parts)] = $loc;
+			}			
 
 			if ($handle = fopen($file, 'r'))
 			{
@@ -457,6 +484,66 @@ EOT;
 		 * 
 		 */
 
+		$io->writeln([
+			'<l>Modes:</>',
+			'<l>------</>',
+		]);
+
+		foreach ($mode_ary as $mode => $loc)
+		{
+			$c_modes .= $this->get_c_key_value_line($mode, $loc);
+			$io->writeln('<info>Mode: </>' . $mode . '<info> Loc: </><v>' . $loc . '</>');
+		}
+
+		$io->writeln([
+			'Mode count: ' . count($mode_ary),
+			'',
+		]);
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>Key maps:</>',
+			'<l>---------</>',
+		]);
+
+		foreach ($keymap_ary as $keymap => $loc)
+		{
+			$c_keymaps .= $this->get_c_key_value_line($keymap, $loc);
+			$io->writeln('<info>Key map: </>' . $keymap . '<info> Loc: </><v>' . $loc . '</>');
+		}
+
+		$io->writeln([
+			'Key map count: ' . count($keymap_ary),
+			'',
+		]);
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>Themes:</>',
+			'<l>-------</>',
+		]);
+
+		foreach ($theme_ary as $theme => $loc)
+		{
+			$c_themes .= $this->get_c_key_value_line($theme, $loc);
+			$io->writeln('<info>Theme: </>' . $theme . '<info> Loc: </><v>' . $loc . '</>');
+		}
+
+		$io->writeln([
+			'Theme count: ' . count($theme_ary),
+			'',
+		]);
+
+		/**
+		 * 
+		 */
+	
 		foreach ($ext_files as $file)
 		{
 			$rel_path = $file->getRelativePathname();
@@ -601,6 +688,7 @@ EOT;
 			$search = ['%c_files%', '%c_css%', '%c_options%', 
 				'%c_commands%', '%c_use_options%',
 				'%c_core_commands%', '%c_default_keymap%',
+				'%c_modes%', '%c_keymaps%', '%c_themes%',
 				'%c_ext_css%',
 				'%c_ext_options%', '%c_ext_commands%', 
 				'%c_ext_use_options%',
@@ -608,6 +696,7 @@ EOT;
 			$replace = [$c_files . "\t", $c_css . "\t", $c_options . "\t", 
 				$c_commands . "\t", $c_use_options . "\t",
 				$c_core_commands . "\t", $c_default_keymap . "\t",
+				$c_modes . "\t", $c_keymaps . "\t", $c_themes . "\t",
 				$c_ext_css . "\t",
 				$c_ext_options . "\t", $c_ext_commands . "\t",
 				$c_ext_use_options . "\t",
