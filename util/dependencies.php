@@ -155,7 +155,6 @@ class dependencies
 	];
 
 	const USE_OPTIONS = [
-		'CHANGELOG' => ['lineNumbers'],
 		'addon/comment/continuecomment' => ['disableInput', 'continueComments'],
 		'addon/display/placeholder' => ['direction', 'placeholder'],
 		'addon/display/rulers' => ['rulers'],
@@ -354,5 +353,28 @@ class dependencies
 		'Right' => 'goCharRight',
 		'Up' => 'goLineUp',
 		'Down' => 'goLineDown',
+	];
+
+	const EXT_CSS = [
+	];
+
+	const EXT_COMMANDS = [
+		'marttiphpbbToggleBorder' => 'addon/border',
+		'marttiphpbbDisableBorder' => 'addon/border',
+		'marttiphpbbEnableBorder' => 'addon/border',
+		'marttiphpbbToggleFullScreen' => 'addon/fullscreen',
+		'marttiphpbbEnableFullScreen' => 'addon/fullscreen',
+		'marttiphpbbDisableFullScreen' => 'addon/fullscreen',
+	];
+
+	const EXT_OPTIONS = [
+		'marttiphpbbBorderEnabled' => 'addon/border',
+		'marttiphpbbBorderStyle' => 'addon/border',
+	];
+
+	const EXT_USE_OPTIONS = [
+		'addon/border' => ['marttiphpbbBorderStyle', 'marttiphpbbBorderEnabled'],
+		'addon/fullscreen' => ['fullScreen'],
+		'js/marttiphpbb_codemirror' => ['theme', 'mode', 'keyMap', 'marttiphpbbBorderEnabled'],
 	];
 }

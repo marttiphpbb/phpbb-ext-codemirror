@@ -55,6 +55,18 @@ class dependencies
 
 	const DEFAULT_KEYMAP = [
 %c_default_keymap%];
+
+	const EXT_CSS = [
+%c_ext_css%];
+
+	const EXT_COMMANDS = [
+%c_ext_commands%];
+
+	const EXT_OPTIONS = [
+%c_ext_options%];
+
+	const EXT_USE_OPTIONS = [
+%c_ext_use_options%];
 }
 EOT;
 
@@ -128,9 +140,13 @@ EOT;
 		]);
 
 		$file_dep_ary = $option_dep_ary = $command_dep_ary = [];
+		$use_option_dep_ary = [];
 		$core_command_ary = $default_keymap_ary = $default_keymap_lines = [];
 		$require_count = 0;
 		$core_commands_open = $default_keymap_open = false;
+
+		$ext_file_dep_ary = $ext_option_dep_ary = $ext_command_dep_ary = [];
+		$ext_use_option_dep_ary = [];
 
 		$dir = self::EXT_ROOT_PATH . 'codemirror';
 
@@ -141,12 +157,27 @@ EOT;
 			->exclude(['src', 'component-tools'])
 			->ignoreVCS(true)
 			->ignoreDotFiles(true)
+			->name('/\.js$|\.css$/')
 			->sortByName();
 
 		$files = iterator_to_array($files);
 
+		$adm_dir = self::EXT_ROOT_PATH . 'adm/style';
+
+		$ext_finder = new Finder();
+		$ext_files = $ext_finder
+			->files()
+			->in($adm_dir)
+			->ignoreVCS(true)
+			->ignoreDotFiles(true)
+			->name('/\.js$|\.css$/')
+			->sortByName();
+
+		$ext_files = iterator_to_array($ext_files);		
+
 		$io->writeln([
 			'File Count: ' . count($files),
+			'Ext File Count: ' . count($ext_files),
 			'',
 			'<l>File Deps</>',
 			'<l>---------</>',
@@ -155,6 +186,8 @@ EOT;
 		$c_files = $c_options = $c_commands = $c_css = '';
 		$c_use_options = $c_core_commands = '';
 		$c_default_keymap = '';
+		$c_ext_css = '';
+		$c_ext_options = $c_ext_use_options = $c_ext_commands = '';
 
 		foreach ($files as $file)
 		{
@@ -424,15 +457,160 @@ EOT;
 		 * 
 		 */
 
+		foreach ($ext_files as $file)
+		{
+			$rel_path = $file->getRelativePathname();
+			list($loc, $ext) = explode('.', $rel_path);
+			$ext_file_dep_ary[$loc][$ext] = true;
+			$loc_require_ary = [];
+
+			if ($handle = fopen($file, 'r'))
+			{
+				while (($line = fgets($handle, 4096)) !== false)
+				{
+					$ext_option_ary = $this->get_option($line);
+					$ext_command_ary = $this->get_command($line);
+					$ext_use_option_ary = $this->get_use_option($line);
+
+					if ($ext_option_ary)
+					{
+						foreach ($ext_option_ary as $option)
+						{		
+							$ext_option_dep_ary[$option] = $loc;
+						}
+					}
+
+					if ($ext_use_option_ary)
+					{
+						foreach ($ext_use_option_ary as $use_option)
+						{		
+							$ext_use_option_dep_ary[$loc][$use_option] = true;
+						}
+					}
+
+					if ($ext_command_ary)
+					{
+						foreach ($ext_command_ary as $command)
+						{		
+							$command = trim($command);
+							$ext_command_dep_ary[$command] = $loc;
+						}
+					}
+				}
+
+				fclose($handle);
+			}
+		}
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>Ext CSS:</>',
+			'<l>--------</>',			
+		]);
+
+		$ext_css_count = 0;
+
+		foreach ($ext_file_dep_ary as $loc => $ary)
+		{
+			if ($ary['js'] && $ary['css'])
+			{
+				$c_ext_css .= $this->get_c_key_value_line($loc, 'true');
+				$io->writeln('<v>' . $loc . '</>');
+				$ext_css_count++;
+			}
+		}
+		$io->writeln([
+			'Ext CSS count: ' . $ext_css_count,
+			'',			
+		]);
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>Ext Option deps:</>',
+			'<l>----------------</>',
+		]);
+
+		foreach ($ext_option_dep_ary as $option => $loc)
+		{
+			$c_ext_options .= $this->get_c_key_value_line($option, $loc);
+			$io->writeln('<info>Ext Option: </>' . $option . '<info> Loc: </><v>' . $loc . '</>');
+		}
+
+		$io->writeln([
+			'Option count: ' . count($ext_option_dep_ary),
+			'',
+		]);
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>Ext Use option deps:</>',
+			'<l>--------------------</>',
+		]);	
+		
+		$ext_use_option_count = 0;
+
+		foreach ($ext_use_option_dep_ary as $loc => $use_options_keys)
+		{
+			$use_options = array_keys($use_options_keys);
+			$use_option_str = '[\'' . implode('\', \'', $use_options) . '\']';
+			$c_ext_use_options .= $this->get_c_key_value_line($loc, $use_option_str);
+			$io->writeln('<info>Loc: </>' . $loc . '<info> Options: </><v>' . $use_option_str . '</>');
+			$ext_use_option_count += count($use_options);
+		}
+
+		$io->writeln([
+			'Ext Use option count: ' . $ext_use_option_count,
+			'',
+		]);
+
+		/**
+		 * 
+		 */
+	
+		$io->writeln([
+			'<l>Ext Command deps:</>',
+			'<l>-----------------</>',
+		]);
+
+		foreach ($ext_command_dep_ary as $command => $loc)
+		{
+			$c_ext_commands .= $this->get_c_key_value_line($command, $loc);
+			$io->writeln('<info>Command: </>' . $command . '<info> Loc: </><v>' . $loc . '</>');
+		}
+
+		$io->writeln([
+			'Ext Command count: ' . count($ext_command_dep_ary),
+			'',
+		]);
+
+		/**
+		 * 
+		 */
+
 		if ($write)
 		{
 			$search = ['%c_files%', '%c_css%', '%c_options%', 
 				'%c_commands%', '%c_use_options%',
 				'%c_core_commands%', '%c_default_keymap%',
+				'%c_ext_css%',
+				'%c_ext_options%', '%c_ext_commands%', 
+				'%c_ext_use_options%',
 			];
 			$replace = [$c_files . "\t", $c_css . "\t", $c_options . "\t", 
 				$c_commands . "\t", $c_use_options . "\t",
 				$c_core_commands . "\t", $c_default_keymap . "\t",
+				$c_ext_css . "\t",
+				$c_ext_options . "\t", $c_ext_commands . "\t",
+				$c_ext_use_options . "\t",
 			];
 			$tpl = str_replace($search, $replace, self::TEMPLATE_FILE);
 
