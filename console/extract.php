@@ -57,7 +57,19 @@ class dependencies
 %c_default_keymap%];
 
 	const MODES = [
-%c_modes%];
+%c_modes%];	
+
+	const MIMES = [
+%c_mimes%];
+
+	const NAMES_TO_MIMES = [
+%c_names_to_mimes%];
+
+	const EXTS_TO_MIMES = [
+%c_exts_to_mimes%];
+
+	const ALIAS_TO_MIMES = [
+%c_alias_to_mimes%];
 
 	const KEYMAPS = [
 %c_keymaps%];
@@ -152,6 +164,8 @@ EOT;
 		$use_option_dep_ary = [];
 		$core_command_ary = $default_keymap_ary = $default_keymap_lines = [];
 		$mode_ary = $keymap_ary = $theme_ary = [];
+		$mode_meta = '';
+		$mode_meta_open = false;
 		$require_count = 0;
 		$core_commands_open = $default_keymap_open = false;
 
@@ -197,6 +211,8 @@ EOT;
 		$c_use_options = $c_core_commands = '';
 		$c_default_keymap = '';
 		$c_modes = $c_keymaps = $c_themes = '';
+		$c_mimes = $c_names_to_mimes = $c_exts_to_mimes = '';
+		$c_alias_to_mimes = '';
 		$c_ext_css = '';
 		$c_ext_options = $c_ext_use_options = $c_ext_commands = '';
 
@@ -208,7 +224,7 @@ EOT;
 			$file_dep_ary[$loc][$ext] = true;
 			$loc_require_ary = [];
 
-			if ($loc_parts[0] === 'mode' && $ext === 'js')
+			if ($loc_parts[0] === 'mode' && $ext === 'js' && $loc !== 'mode/meta')
 			{
 				$mode_ary[end($loc_parts)] = $loc;
 			}
@@ -272,6 +288,29 @@ EOT;
 							$command = trim($command);
 							$command_dep_ary[$command] = $loc;
 						}
+					}
+
+					if ($loc === 'mode/meta' && $ext === 'js')
+					{
+						if (strpos($line, '  CodeMirror.modeInfo = [') === 0)
+						{
+							$mode_meta_open = true;
+							continue;						
+						}
+						if (strpos($line, '  ];') === 0)
+						{
+							$mode_meta_open = false;
+						}
+					}
+					else
+					{
+						$mode_meta_open = false;
+					}
+
+					if ($mode_meta_open)
+					{
+						$mode_meta .= trim($line);
+						continue;
 					}
 
 					if ($loc !== 'lib/codemirror' || $ext !== 'js')
@@ -505,6 +544,156 @@ EOT;
 		 */
 
 		$io->writeln([
+			'<l>MIME to mode:</>',
+			'<l>-------------</>',
+		]);	
+
+		$tags = [
+			[', file: /', '$/i'],
+			[', file: /', '$/'],
+		];
+
+		$ary = $this->get_tagged_content_ary($mode_meta, $tags);
+
+		$search = [];
+
+		foreach ($ary as $content)
+		{
+			foreach ($tags as $tag)
+			{
+				$search[] = $tag[0] . $content . $tag[1];
+			}
+		}
+
+		$mode_meta = str_replace($search, '', $mode_meta);
+
+		$search = ['alias:', 'name:', 'mode:', 'ext:', 'mime:', 'mimes:'];
+		$replace = ['"alias":', '"name":', '"mode":', '"ext":', '"mime":', '"mimes":'];
+
+		$mode_meta = str_replace($search, $replace, $mode_meta);
+
+		$mode_meta = '[' . $mode_meta . ']';
+		$json = json_decode($mode_meta, true);
+
+		$mime_count = 0;
+		$exts_to_mimes_ary = $names_to_mimes_ary = [];
+		$alias_to_mimes_ary = [];
+
+		foreach ($json as $mode_info)
+		{
+			$mode = $mode_info['mode'] === 'null' ? '' : $mode_info['mode'];
+
+			if (isset($mode_info['mimes']))
+			{
+				$mimes = $mode_info['mimes'];
+			}
+			else if (isset($mode_info['mime']) && $mode_info['mime'] !== 'null')
+			{
+				$mimes = [$mode_info['mime']];
+			}
+			else
+			{
+				$mimes =[];
+			}
+
+			foreach ($mimes as $mime)
+			{
+				$mime_count++;
+				$c_mimes .= $this->get_c_key_value_line($mime, $mode);
+				$io->writeln('<info>MIME: </>' . $mime . '<info> Mode: </><v>' . $mode . '</>');				
+			}
+
+			$mimes = '[\'' . implode('\', \'', $mimes) . '\']';
+
+			if (isset($mode_info['ext']))
+			{
+				foreach ($mode_info['ext'] as $ext)
+				{
+					$exts_to_mimes_ary[$ext] = $mimes;
+				}
+			}
+
+			$names_to_mimes_ary[strtolower($mode_info['name'])] = $mimes;
+
+			if (isset($mode_info['alias']))
+			{
+				foreach ($mode_info['alias'] as $alias)
+				{
+					$alias_to_mimes_ary[$alias] = $mimes;
+				}
+			}
+		}
+
+		$io->writeln([
+			'MIME count: ' . $mime_count,
+			'',
+		]);	
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>File exts to MIMEs:</>',
+			'<l>-------------------</>',
+		]);	
+		
+		foreach ($exts_to_mimes_ary as $ext => $mimes)
+		{
+			$c_exts_to_mimes .= $this->get_c_key_value_line($ext, $mimes);
+			$io->writeln('<info>ext: </>' . $ext . '<info> MIMEs: </><v>' . $mimes . '</>');
+		}					
+
+		$io->writeln([
+			'File exts count: ' . count($exts_to_mimes_ary),
+			'',
+		]);	
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>Names to MIMEs:</>',
+			'<l>---------------</>',
+		]);	
+
+		foreach ($names_to_mimes_ary as $name => $mimes)
+		{
+			$c_names_to_mimes .= $this->get_c_key_value_line($name, $mimes);
+			$io->writeln('<info>Name: </>' . $name . '<info> MIMEs: </><v>' . $mimes . '</>');
+		}
+
+		$io->writeln([
+			'Name to MIMEs count: ' . count($names_to_mimes_ary),
+			'',
+		]);	
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>Alias to MIMEs:</>',
+			'<l>---------------</>',
+		]);	
+
+		foreach ($alias_to_mimes_ary as $alias => $mimes)
+		{
+			$c_alias_to_mimes .= $this->get_c_key_value_line($alias, $mimes);
+			$io->writeln('<info>Alias: </>' . $alias . '<info> MIMEs: </><v>' . $mimes . '</>');
+		}
+
+		$io->writeln([
+			'Alias to MIMEs count: ' . count($alias_to_mimes_ary),
+			'',
+		]);
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
 			'<l>Key maps:</>',
 			'<l>---------</>',
 		]);
@@ -689,6 +878,8 @@ EOT;
 				'%c_commands%', '%c_use_options%',
 				'%c_core_commands%', '%c_default_keymap%',
 				'%c_modes%', '%c_keymaps%', '%c_themes%',
+				'%c_mimes%', '%c_names_to_mimes%', 
+				'%c_exts_to_mimes%', '%c_alias_to_mimes%',
 				'%c_ext_css%',
 				'%c_ext_options%', '%c_ext_commands%', 
 				'%c_ext_use_options%',
@@ -697,6 +888,8 @@ EOT;
 				$c_commands . "\t", $c_use_options . "\t",
 				$c_core_commands . "\t", $c_default_keymap . "\t",
 				$c_modes . "\t", $c_keymaps . "\t", $c_themes . "\t",
+				$c_mimes . "\t", $c_names_to_mimes . "\t",
+				$c_exts_to_mimes . "\t", $c_alias_to_mimes . "\t",
 				$c_ext_css . "\t",
 				$c_ext_options . "\t", $c_ext_commands . "\t",
 				$c_ext_use_options . "\t",
