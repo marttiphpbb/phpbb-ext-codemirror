@@ -36,7 +36,6 @@ class ext extends base
 				$version = json_decode($package_json, true)['version'];
 				$data = serialize(array_merge(unserialize($data), ['version' => $version]));
 				$config_text->set(store::KEY, $data);
-
 			}
 	
 			return 'codemirror_version_set';

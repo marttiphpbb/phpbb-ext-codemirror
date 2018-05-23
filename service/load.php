@@ -10,137 +10,13 @@ namespace marttiphpbb\codemirror\service;
 
 use phpbb\extension\manager as ext_manager;
 use marttiphpbb\codemirror\service\store;
-use marttiphpbb\codemirror\service\config;
-use marttiphpbb\codemirror\service\available;
 use marttiphpbb\codemirror\util\cnst;
+use marttiphpbb\codemirror\util\dependencies as dep;
 
 class load
 {
-	const MODE_SHORT = [
-		'scss'			=> 'text/x-scss',
-		'less'			=> 'text/x-less',
-		'html'			=> 'text/html',
-		'json'			=> 'application/json',
-	];
-
-	const MODE_DEP = [
-		'dart'				=> 'clike',
-		'django'			=> 'htmlmixed',
-		'gfm'				=> 'markdown',
-		'haml'				=> ['htmlmixed', 'ruby'],
-		'haskel-literate'	=> 'haskel',
-		'htmlembedded'		=> 'htmlmixed',
-		'htmlmixed'			=> ['xml', 'javascript', 'css'],
-		'jsx'				=> ['xml', 'javascript'],
-		'markdown'			=> 'xml',
-		'pegjs'				=> 'javascript',
-		'php'				=> ['htmlmixed', 'clike'],
-		'pug'				=> ['javascript', 'css', 'htmlmixed'],
-		'rst'				=> ['python', 'stex'],
-		'sass'				=> 'css',
-		'slim'				=> ['htmlmixed', 'ruby'],
-		'soy'				=> 'htmlmixed',
-		'tornado'			=> 'htmlmixed',
-		'vue'				=> ['xml', 'javascript', 'coffeescript', 'css', 'stylus', 'pug', 'handlebars'],
-		'yaml-frontmatter'	=> 'yaml',
-	];
-
-	const MODE_ADDON_DEP = [
-		'django'		=> 'mode/overlay',
-		'dockerfile'	=> 'mode/simple',
-		'factor'		=> 'mode/simple',
-		'gfm'			=> 'mode/overlay',
-		'handlebars'	=> ['mode/simple', 'mode/multiplex'],
-		'htmlembedded'	=> 'mode/multiplex',
-		'nsis'			=> 'mode/simple',
-		'rst'			=> 'mode/overlay',
-		'rust'			=> 'mode/simple',
-		'tornado'		=> 'mode/overlay',
-		'twig'			=> 'mode/multiplex',
-		'vue'			=> 'mode/overlay',
-	];
-
-	const MODE_DEP_META = [
-		'markdown'		=> true,
-	];
-
-	const ADDON_CSS = [
-		'dialog/dialog'				=> true,
-		'display/fullscreen'		=> true,
-		'fold/foldgutter'			=> true,
-		'hint/showhint'				=> true,
-		'lint/lint'					=> true,
-		'merge/merge'				=> true,
-		'scroll/simplescrollbars'	=> true,
-		'search/matchesonscrollbar'	=> true,
-		'tern/tern'					=> true,
-	];
-
-	const ADDON_DEP = [
-		'edit/closetag'				=> 'fold/xml-fold',
-		'edit/matchtags'			=> 'fold/xml-fold',
-		'fold/foldgutter'			=> 'fold/foldcode',
-		'hint/html-hint'			=> 'hint/xml-hint',
-		'runmode/colorize'			=> 'runmode/runmode',
-		'search/jump-to-line'		=> 'dialog/dialog',
-		'search/match-highlighter'	=> 'search/matchonscrollbar',
-		'search/matchesonscrollbar'	=> ['scroll/annotatescrollbar', 'scroll/simplescrollbars', 'search/searchcursor'],
-		'search/search'				=> ['search/searchcursor', 'dialog/dialog'],
-	];
-
-	const ADDON_MODE_DEP = [
-		'hint/css-hint'		=> 'css',
-		'hint/sql-hint'		=> 'sql',
-	];
-
-	const ADDON_DEP_EXTRA = [
-		'lint/html-lint'	=> 'htmllint',
-		'merge/merge'		=> 'diff_match_patch',
-	];
-
-	const KEYMAP_ADDON_DEP = [
-		'sublime'	=> ['search/searchcursor', 'edit/matchbrackets'],
-		'vim'		=> ['search/searchcursor', 'edit/matchbrackets', 'dialog/dialog'],
-	];
-
-	const EXT_ADDON_DEP = [
-		'fullscreen'	=> [
-			'display/fullscreen'
-		],
-		''
-	];
-
-	const COMMAND_ADDON = [
-		'',
-		'jumpToLine'		=> 'search/jump-to-line',
-	];
-
-	const OPTION_ADDON_DEP = [
-		'matchBrackets' 		=> 'edit/matchbrackets',
-		'autoCloseBrackets'		=> 'edit/closebrackets',
-		'matchTags'				=> 'edit/matchtags',
-		'showTrailingSpace'		=> 'edit/trailingspace',
-		'autoCloseTags'			=> 'edit/closetag',
-		'newlineAndIndentContinueMarkdownList'	=> 'edit/continuelist',
-		'foldGutter'			=> 'fold/foldgutter',
-		'styleActiveLine'		=> 'selection/active-line',
-		'continueComments'		=> 'comment/continuecomment',
-		'placeholder'			=> 'display/placeholder',
-		'fullScreen'			=> 'display/fullscreen',
-		'scrollbarStyle'		=> 'scroll/simplescrollbars',
-		'rulers'				=> 'display/rulers',
-	];
-
-	CONST FROM_COMMANDS = [
-		'marttiphpbbToggleFullScreen'	=> 'addon/display/fullscreen',
-		'marttiphpbbExitFullScreen'		=> 'addon/display/fullscreen',
-	];
-
-	/** @var config */
-	private $config;
-
-	/** @var available */
-	private $available;
+	/** @var store */
+	private $store;
 
 	/** @var string */
 	private $phpbb_root_path;
@@ -148,6 +24,12 @@ class load
 	/** @var string */
 	private $ext_root_path;
 
+	private $cm_css = [];
+	private $cm_js = [];
+	private $ext_css = [];
+	private $ext_js = [];
+	private $custom_css = [];
+	private $custom_js = [];
 	private $mode_keys = [];
 	private $mode;
 	private $theme_keys = [];
@@ -164,13 +46,11 @@ class load
 	private $custom_keys = [];
 
 	public function __construct(
-		config $config,
-		available $available,
+		store $store,
 		string $phpbb_root_path
 	)
 	{
-		$this->config = $config;
-		$this->available = $available;
+		$this->store = $store;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->ext_root_path = $this->phpbb_root_path . cnst::EXT_PATH;		
 	}
@@ -190,13 +70,18 @@ class load
 		$version = $this->config->get_version();
 
 		$load = [
-			'cm'		=> array_keys($this->cm_keys),
-			'ext'		=> array_keys($this->ext_keys),
-			'custom'	=> array_keys($this->custom_keys),
-			'themes' 	=> array_keys($this->theme_keys),
-			'modes'		=> array_keys($this->mode_keys),
-			'keymaps' 	=> array_keys($this->keymap_keys),
-			'addons'	=> array_keys($this->addon_keys),
+			'cm_css'		=> array_keys($this->cm_css),
+			'cm_js'			=> array_keys($this->cm_js),
+			'ext_css'		=> array_keys($this->ext_css),
+			'ext_js'		=> array_keys($this->ext_js),
+			'cm'			=> array_keys($this->cm_keys),
+			'ext'			=> array_keys($this->ext_keys),
+			'custom_css'	=> array_keys($this->custom_keys),
+			'custom_js'		=> array_keys($this->custom_js),
+			'themes' 		=> array_keys($this->theme_keys),
+			'modes'			=> array_keys($this->mode_keys),
+			'keymaps' 		=> array_keys($this->keymap_keys),
+			'addons'		=> array_keys($this->addon_keys),
 		];
 
 		return [
@@ -245,7 +130,7 @@ class load
 
 	public function all_keymaps()
 	{
-		$this->keymaps($this->available->get_keymaps());
+		$this->keymaps(dep::KEYMAPS);
 	}
 
 	public function keymaps(array $keymaps)
@@ -258,8 +143,8 @@ class load
 
 	public function keymap(string $keymap)
 	{
+		$this->cm_js[dep::KEYMAPS[$keymap]] = true;
 		$this->keymap_keys[$keymap] = true;
-		$this->cm_keys['keymap/' . $keymap . '.js'] = true;
 	}
 
 	public function select_mode(string $mode)
@@ -284,7 +169,7 @@ class load
 	public function mode(string $mode)
 	{
 		$this->mode_keys[$mode] = true;
-		$this->cm_keys['mode/' . $mode . '/' . $mode . '.js'] = true;
+		$this->cm_js[dep::MODES[$mode]] = $mode;
 	}
 
 	public function select_theme(string $theme)
@@ -309,7 +194,7 @@ class load
 	public function theme(string $theme)
 	{
 		$this->theme_keys[$theme] = true;
-		$this->cm_keys['theme/' . $theme . '.css'] = true;		
+		$this->cm_css[dep::THEMES[$theme]] = $theme;		
 	}
 
 	public function addons(array $addons)
@@ -324,6 +209,8 @@ class load
 	{
 		$this->addon_keys[$addon] = true;
 		$this->cm_keys['addon/' . $addon . '.js'] = true;
+
+//		$this->cm_js[dep::]
 
 		if (isset(self::ADDON_CSS[$addon]))
 		{

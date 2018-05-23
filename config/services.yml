@@ -5,28 +5,17 @@ services:
             - '@user'
         tags:
             - { name: console.command }
+
     marttiphpbb.codemirror.store:
         class: marttiphpbb\codemirror\service\store
         arguments:
             - '@config_text'
             - '@cache.driver'
 
-    marttiphpbb.codemirror.config:
-        class: marttiphpbb\codemirror\service\config
-        arguments:
-            - '@marttiphpbb.codemirror.store'
-
-    marttiphpbb.codemirror.available:
-        class: marttiphpbb\codemirror\service\available
-        arguments:
-            - '@ext.manager'
-            - '%core.root_path%'
-
     marttiphpbb.codemirror.load:
         class: marttiphpbb\codemirror\service\load
         arguments:
-            - '@marttiphpbb.codemirror.config'
-            - '@marttiphpbb.codemirror.available'
+            - '@marttiphpbb.codemirror.store'
             - '%core.root_path%'
 
     marttiphpbb.codemirror.listener:

@@ -1,25 +1,25 @@
-{%- for f in c.load.cm -%}
-    {%- if f|split('.')|last == 'css' -%}
-        {%- INCLUDECSS c.cm_path~'/'~f~c.cm_version_param -%}
-    {%- else -%}
-        {%- INCLUDEJS c.cm_path~'/'~f~c.cm_version_param -%}
-    {%- endif -%}
+{%- for f in c.load.cm_css -%}
+    {%- INCLUDECSS c.cm_path~f~'.css'~c.cm_version_param -%}
 {%- endfor -%}
 
-{%- for f in c.load.ext -%}
-    {%- if f|split('.')|last == 'css' -%}
-        {%- INCLUDECSS '@marttiphpbb_codemirror/'~f -%}
-    {%- else -%}
-        {%- INCLUDEJS '@marttiphpbb_codemirror/'~f -%}
-    {%- endif -%}
+{%- for f in c.load.cm_js -%}
+    {%- INCLUDEJS c.cm_path~f~'.js'~c.cm_version_param -%}
 {%- endfor -%}
 
-{%- for f in c.load.custom -%}
-    {%- if f|split('.')|last == 'css' -%}
-        {%- INCLUDECSS f -%}
-    {%- else -%}
-        {%- INCLUDEJS f -%}
-    {%- endif -%}
+{%- for f in c.load.ext_css -%}
+    {%- INCLUDECSS '@marttiphpbb_codemirror/'~f~'.css' -%}
+{%- endfor -%}
+
+{%- for f in c.load.ext_js -%}
+    {%- INCLUDEJS '@marttiphpbb_codemirror/'~f~'.js' -%}
+{%- endfor -%}
+
+{%- for f in c.load.custom_css -%}
+    {%- INCLUDECSS f -%}
+{%- endfor -%}
+
+{%- for f in c.load.custom_js -%}
+    {%- INCLUDEJS f -%}
 {%- endfor -%}
 
 {%- INCLUDEJS '@marttiphpbb_codemirror/js/marttiphpbb_codemirror.js' -%}

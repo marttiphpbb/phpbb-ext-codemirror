@@ -77,6 +77,9 @@ class dependencies
 	const THEMES = [
 %c_themes%];
 
+	const ADDONS = [
+%c_addons%];
+
 	const EXT_CSS = [
 %c_ext_css%];
 
@@ -163,7 +166,7 @@ EOT;
 		$file_dep_ary = $option_dep_ary = $command_dep_ary = [];
 		$use_option_dep_ary = [];
 		$core_command_ary = $default_keymap_ary = $default_keymap_lines = [];
-		$mode_ary = $keymap_ary = $theme_ary = [];
+		$mode_ary = $keymap_ary = $theme_ary = $addon_ary = [];
 		$mode_meta = '';
 		$mode_meta_open = false;
 		$require_count = 0;
@@ -210,7 +213,7 @@ EOT;
 		$c_files = $c_options = $c_commands = $c_css = '';
 		$c_use_options = $c_core_commands = '';
 		$c_default_keymap = '';
-		$c_modes = $c_keymaps = $c_themes = '';
+		$c_modes = $c_keymaps = $c_themes = $c_addons = '';
 		$c_mimes = $c_names_to_mimes = $c_exts_to_mimes = '';
 		$c_alias_to_mimes = '';
 		$c_ext_css = '';
@@ -237,6 +240,13 @@ EOT;
 			if ($loc_parts[0] === 'theme' && $ext === 'css')
 			{
 				$theme_ary[end($loc_parts)] = $loc;
+			}			
+
+			if ($loc_parts[0] === 'addon' && $ext === 'js')
+			{
+				$end = end($loc_parts);
+				$prev = prev($loc_parts);
+				$addon_ary[$prev . '/' . $end] = $loc;
 			}			
 
 			if ($handle = fopen($file, 'r'))
@@ -550,34 +560,13 @@ EOT;
 
 		$mode_meta = str_replace(['file: /', '$/', '$/"i', '\.'], ['file: "', '$/"', '$/i"', '\\\\.'], $mode_meta);
 
-/*
-		$tags = [
-			[', file: /', '$/i'],
-			[', file: /', '$/'],
-		];
-
-		$ary = $this->get_tagged_content_ary($mode_meta, $tags);
-
-		$search = [];
-
-		foreach ($ary as $content)
-		{
-			foreach ($tags as $tag)
-			{
-				$search[] = $tag[0] . $content . $tag[1];
-			}
-		}
-
-		$mode_meta = str_replace($search, '', $mode_meta);
-*/
 		$search = ['alias:', 'name:', 'mode:', 'ext:', 'mime:', 'mimes:', 'file:'];
 		$replace = ['"alias":', '"name":', '"mode":', '"ext":', '"mime":', '"mimes":', '"file":'];
 
 		$mode_meta = str_replace($search, $replace, $mode_meta);
 
 		$mode_meta = '[' . $mode_meta . ']';
-
-		var_dump($mode_meta);		
+		
 		$json = json_decode($mode_meta, true);
 
 		$mime_count = 0;
@@ -711,6 +700,26 @@ EOT;
 
 		$io->writeln([
 			'Key map count: ' . count($keymap_ary),
+			'',
+		]);
+
+		/**
+		 * 
+		 */
+
+		$io->writeln([
+			'<l>Addons:</>',
+			'<l>-------</>',
+		]);
+
+		foreach ($addon_ary as $addon => $loc)
+		{
+			$c_addons .= $this->get_c_key_value_line($addon, $loc);
+			$io->writeln('<info>Addon: </>' . $addon . '<info> Loc: </><v>' . $loc . '</>');
+		}
+
+		$io->writeln([
+			'Addon count: ' . count($addon_ary),
 			'',
 		]);
 
@@ -883,6 +892,7 @@ EOT;
 				'%c_commands%', '%c_use_options%',
 				'%c_core_commands%', '%c_default_keymap%',
 				'%c_modes%', '%c_keymaps%', '%c_themes%',
+				'%c_addons%',
 				'%c_mimes%', '%c_names_to_mimes%', 
 				'%c_exts_to_mimes%', '%c_alias_to_mimes%',
 				'%c_ext_css%',
@@ -893,6 +903,7 @@ EOT;
 				$c_commands . "\t", $c_use_options . "\t",
 				$c_core_commands . "\t", $c_default_keymap . "\t",
 				$c_modes . "\t", $c_keymaps . "\t", $c_themes . "\t",
+				$c_addons . "\t",
 				$c_mimes . "\t", $c_names_to_mimes . "\t",
 				$c_exts_to_mimes . "\t", $c_alias_to_mimes . "\t",
 				$c_ext_css . "\t",
