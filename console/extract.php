@@ -546,8 +546,11 @@ EOT;
 		$io->writeln([
 			'<l>MIME to mode:</>',
 			'<l>-------------</>',
-		]);	
+		]);
 
+		$mode_meta = str_replace(['file: /', '$/', '$/"i', '\.'], ['file: "', '$/"', '$/i"', '\\\\.'], $mode_meta);
+
+/*
 		$tags = [
 			[', file: /', '$/i'],
 			[', file: /', '$/'],
@@ -566,13 +569,15 @@ EOT;
 		}
 
 		$mode_meta = str_replace($search, '', $mode_meta);
-
-		$search = ['alias:', 'name:', 'mode:', 'ext:', 'mime:', 'mimes:'];
-		$replace = ['"alias":', '"name":', '"mode":', '"ext":', '"mime":', '"mimes":'];
+*/
+		$search = ['alias:', 'name:', 'mode:', 'ext:', 'mime:', 'mimes:', 'file:'];
+		$replace = ['"alias":', '"name":', '"mode":', '"ext":', '"mime":', '"mimes":', '"file":'];
 
 		$mode_meta = str_replace($search, $replace, $mode_meta);
 
 		$mode_meta = '[' . $mode_meta . ']';
+
+		var_dump($mode_meta);		
 		$json = json_decode($mode_meta, true);
 
 		$mime_count = 0;
