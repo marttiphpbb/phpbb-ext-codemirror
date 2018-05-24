@@ -22,11 +22,7 @@ class main_module
 		$language = $phpbb_container->get('language');
 
 		$load = $phpbb_container->get('marttiphpbb.codemirror.load');
-//		$codemirror_config = $phpbb_container->get('marttiphpbb.codemirror.config');
-
-		$phpbb_root_path = $phpbb_container->getParameter('core.root_path');
-		$ext_relative_path = 'ext/' . cnst::FOLDER . '/';
-		$ext_root_path = $phpbb_root_path . $ext_relative_path;
+		$store = $phpbb_container->get('marttiphpbb.codemirror.store');
 
 		$language->add_lang('acp', cnst::FOLDER);
 		add_form_key(cnst::FOLDER);
@@ -45,47 +41,31 @@ class main_module
 						trigger_error('FORM_INVALID');
 					}
 
+					$config = trim($request->variable('config', ''));
+
+					$json = json_decode($config, true);
+
+					if (!isset($json))
+					{
+						trigger_error($language->lang(cnst::L_ACP . '_INVALID_JSON') . adm_back_link($this->u_action), E_USER_WARNING);
+					}
+
+					$store->set('config', $config);
+
 					trigger_error($language->lang(cnst::L_ACP . '_CONFIG_SAVED') . adm_back_link($this->u_action));
 				}
 
 				$load->set_mode('json');
 				$load->load_all_themes();
 
-				$config = file_get_contents(__DIR__ . '/../default_config.json');
-				
-				$template->assign_var('CONFIG', $config);
-	
-				break;
-
-			case 'try':
-
-				$this->tpl_name = 'try';
-				$this->page_title = $language->lang(cnst::L_ACP . '_TRY');
-
-
-/*				
-				if ($request->is_set_post('submit'))
+				$config = $store->get('config');
+		
+				if (!$config)
 				{
-					if (!check_form_key(cnst::FOLDER))
-					{
-						trigger_error('FORM_INVALID');
-					}
-
-
-
-					trigger_error($language->lang(cnst::L_ACP . '_CONFIG_SAVED') . adm_back_link($this->u_action));
+					$config = file_get_contents(__DIR__ . '/../default_config.json');
 				}
-*/
 
-
-				$load->select_mode('javascript');
-//				$load->all_modes();
-//				$load->all_keymaps();
-//				$load->all_themes();
-
-	
-
-//				$template->assign_var('CONTENT', $config);
+				$template->assign_var('CONFIG', $config);
 	
 				break;
 		}

@@ -21,12 +21,7 @@ class main_info
 					'title'	=> cnst::L_ACP . '_CONFIG',
 					'auth'	=> 'ext_marttiphpbb/codemirror && acl_a_board',
 					'cat'	=> [cnst::L_ACP],
-				],
-				'try'	=> [
-					'title'	=> cnst::L_ACP . '_TRY',
-					'auth'	=> 'ext_marttiphpbb/codemirror && acl_a_board',
-					'cat'	=> [cnst::L_ACP],
-				],							
+				],						
 			],
 		];
 	}

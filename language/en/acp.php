@@ -19,10 +19,11 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 
 	'ACP_MARTTIPHPBB_CODEMIRROR_CONFIG_EXPLAIN'			
-		=> 'See <a href="http://codemirror.net/doc/manual.html#config">
-			CodeMirror configuration</a> for the possible options.
-			This extension which integrates CodeMirror for use in the ACP 
-			by other extensions also',
+		=> 'This extension integrates CodeMirror for use in the ACP 
+			by other extensions. See <a href="http://codemirror.net/doc/manual.html#config">
+			CodeMirror configuration</a> and 
+			<a href="https://github.com/marttiphpbb/phpbb-ext-codemirror">
+			configuration options defined by this extension</a> for all possible options.',
 	'ACP_MARTTIPHPBB_CODEMIRROR_VERSION'			=> '<a href="http://codemirror.net">CodeMirror</a> version: %s',
 	'ACP_MARTTIPHPBB_CODEMIRROR_THEME'				=> 'Theme',
 	'ACP_MARTTIPHPBB_CODEMIRROR_TRY_THEME'			=> 'Try theme',
@@ -30,6 +31,6 @@ $lang = array_merge($lang, [
 	'ACP_MARTTIPHPBB_CODEMIRROR_MODE'				=> 'Mode',
 	'ACP_MARTTIPHPBB_CODEMIRROR_KEYMAP'				=> 'Key map',
 	'ACP_MARTTIPHPBB_CODEMIRROR_CONFIG_SAVED'		=> 'The configuration was saved.',
-	'ACP_MARTTIPHPBB_CODEMIRROR_TRY_EXPLAIN'		=> 'Try here the CodeMirror editor in different modes (languages) with the current configuration.',
+	'ACP_MARTTIPHPBB_CODEMIRROR_INVALID_JSON'		=> 'The json configuration contains at least one error.',
 	'ACP_MARTTIPHPBB_CODEMIRROR_RESTORE_DEFAULTS'	=> 'Restore defaults',
 ]);

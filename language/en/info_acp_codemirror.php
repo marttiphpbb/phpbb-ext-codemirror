@@ -20,5 +20,4 @@ $lang = array_merge($lang, [
 
 	'ACP_MARTTIPHPBB_CODEMIRROR'			=> 'CodeMirror',
 	'ACP_MARTTIPHPBB_CODEMIRROR_CONFIG'		=> 'Configuration',
-	'ACP_MARTTIPHPBB_CODEMIRROR_TRY'		=> 'Try',
 ]);
