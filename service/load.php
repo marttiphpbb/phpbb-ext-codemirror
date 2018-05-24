@@ -151,6 +151,11 @@ class load
 				continue;
 			}
 
+			if ($option === 'showTrailingSpace' && $value === true)
+			{
+				$this->ext_css['css/trailingspace'] = true;
+			}
+
 			if (isset(dep::OPTIONS[$option]))
 			{
 				$this->cm_js[dep::OPTIONS[$option]] = true;

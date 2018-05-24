@@ -1212,6 +1212,7 @@ class dependencies
 		'marttiphpbbToggleFullScreen' => 'addon/fullscreen',
 		'marttiphpbbEnableFullScreen' => 'addon/fullscreen',
 		'marttiphpbbDisableFullScreen' => 'addon/fullscreen',
+		'marttiphpbbSubmit' => 'addon/submit',
 	];
 
 	const EXT_OPTIONS = [

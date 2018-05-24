@@ -1,11 +1,12 @@
 {
-    "theme": "night",
+    "theme": "panda-syntax",
     "lineNumbers": true,
     "indentWithTabs": false,
     "extraKeys": {
       "F11": "marttiphpbbToggleFullScreen",
       "Esc": "marttiphpbbDisableFullScreen",
-      "Ctrl-Alt-B": "marttiphpbbToggleBorder"
+      "Ctrl-Alt-B": "marttiphpbbToggleBorder",
+      "Ctrl-S": "marttiphpbbSubmit"
     },
     "matchBrackets": true,
     "autoCloseBrackets": true,
@@ -14,5 +15,6 @@
     "autoCloseTags": true,
     "newlineAndIndentContinueMarkdownList": true,
     "foldGutter": true,
-    "styleActiveLine": true
+    "styleActiveLine": true,
+    "marttiphpbbBorderEnabled": true
 }
