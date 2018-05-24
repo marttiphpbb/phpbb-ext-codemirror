@@ -1,4 +1,5 @@
 {
+    "theme": "night",
     "lineNumbers": true,
     "indentWithTabs": false,
     "extraKeys": {

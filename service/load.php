@@ -24,26 +24,24 @@ class load
 	/** @var string */
 	private $ext_root_path;
 
-	private $cm_css = [];
-	private $cm_js = [];
+	private $cm_css = [
+		'lib/codemirror'	=> true,
+	];
+	private $cm_js = [
+		'lib/codemirror'	=> true,
+	];
 	private $ext_css = [];
 	private $ext_js = [];
 	private $custom_css = [];
 	private $custom_js = [];
 	private $mode_keys = [];
-	private $mode;
 	private $theme_keys = [];
-	private $theme;
 	private $keymap_keys = [];
-	private $keymap;
 	private $addon_keys = [];
-
-	private $cm_keys = [
-		'lib/codemirror.css'	=> true,
-		'lib/codemirror.js'		=> true,
-	];
-	private $ext_keys = [];
-	private $custom_keys = [];
+	private $config;
+	private $valid_config = true;
+	private $version;
+	private $enabled = false;
 
 	public function __construct(
 		store $store,
@@ -52,179 +50,323 @@ class load
 	{
 		$this->store = $store;
 		$this->phpbb_root_path = $phpbb_root_path;
-		$this->ext_root_path = $this->phpbb_root_path . cnst::EXT_PATH;		
+		$this->ext_root_path = $this->phpbb_root_path . cnst::EXT_PATH;	
 	}
 
 	public function is_enabled():bool
 	{
-		return $this->mode ? true : false;
+		return $this->enabled;
+	}
+
+	private function load_data()
+	{
+		if (!isset($this->version))
+		{
+			$data = $this->store->get_all();
+			$this->version = $data['version'];
+			$config = $data['config'];
+			$this->config = json_decode($config, true);
+	
+			if (!isset($this->config))
+			{
+				$this->valid_config = false;
+				$config = file_get_contents(__DIR__ . '/../default_config.json');
+				$this->config = json_decode($config, true);
+			}
+		}
+	}
+
+	public function set_option(string $option, $value)
+	{
+		$this->load_data();
+		$this->config[$option] = $value;
+	}
+
+	public function get_option(string $option)
+	{
+		$this->load_data();
+		return $this->config[$option] ?? null;
 	}
 
 	public function get_listener_data():array 
 	{
-		if (!$this->mode)
+		if (!$this->enabled)
 		{
 			return [];
 		}
 
-		$version = $this->config->get_version();
+		foreach ($this->config as $option => $value)
+		{
+			if ($option === 'theme' && isset(dep::THEMES[$value]))
+			{
+				$theme = $value;
+				$this->theme_keys[$value] = true;
+				$this->cm_css[dep::THEMES[$value]] = true;
+				continue;
+			}
+
+			if ($option === 'mode')
+			{
+				$mode = $value;
+
+				if (isset(dep::MODES[$value]))
+				{
+					$this->mode_keys[$value] = true;
+					$this->cm_js[dep::MODES[$value]] = true;
+					continue;					
+				}
+				
+				if (isset(dep::MIMES[$value]))
+				{
+					$this->mode_keys[$value] = true;
+					$this->cm_js[dep::MODES[dep::MIMES[$value]]] = true;
+					continue;
+				}
+			}
+
+			if ($option === 'keyMap' && isset(dep::KEYMAPS[$value]))
+			{
+				$keymap = $value;
+				$this->keymap_keys[$value] = true;
+				$this->cm_js[dep::KEYMAPS[$value]] = true;
+
+				continue;
+			}
+
+			if ($option === 'extraKeys')
+			{
+				foreach ($value as $key => $command)
+				{
+					if (isset(dep::COMMANDS[$command]))
+					{
+						$this->cm_js[dep::COMMANDS[$command]] = true;
+					}
+					
+					if (isset(dep::EXT_COMMANDS[$command]))
+					{
+						$this->ext_js[dep::EXT_COMMANDS[$command]] = true;
+					}
+				}
+	
+				continue;
+			}
+
+			if (isset(dep::OPTIONS[$option]))
+			{
+				$this->cm_js[dep::OPTIONS[$option]] = true;
+				continue;
+			}
+
+			if (isset(dep::EXT_OPTIONS[$option]))
+			{
+				$this->ext_js[dep::EXT_OPTIONS[$option]] = true;
+				continue;
+			}
+		}
+
+		foreach ($this->ext_js as $file => $b)
+		{
+			if (isset(dep::EXT_USE_OPTIONS[$file]))
+			{
+				foreach (dep::EXT_USE_OPTIONS[$file] as $option)
+				{
+					if (isset(dep::OPTIONS[$option]))
+					{
+						$this->cm_js[dep::OPTIONS[$option]] = true;
+						continue;
+					}
+
+					if (isset(dep::EXT_OPTIONS[$option]))
+					{
+						$this->ext_js[dep::EXT_OPTIONS[$option]] = true;
+						continue;
+					}
+				}
+			}
+		}
+
+		foreach ($this->cm_js as $file => $b)
+		{
+			$this->load_cm_file_dep($file);
+		}
+
+		foreach ($this->cm_js as $file => $b)
+		{
+			if (isset(dep::CSS[$file]))
+			{			
+				$this->cm_css[$file] = true;
+			}
+		}
+
+		foreach ($this->ext_js as $file => $b)
+		{
+			if (isset(dep::EXT_CSS[$file]))
+			{
+				$this->ext_css[dep::EXT_CSS[$file]] = true;
+			}
+		}
+
+		$data = [
+			'config'	=> $this->config,
+		];
+
+		if (isset($this->history_id))
+		{
+			$data['historyId'] = $this->history_id;
+		}
+
+		$data_attr = ' data-marttiphpbb-codemirror="%s"';
+		$data = htmlspecialchars(json_encode($data), ENT_QUOTES, 'UTF-8');
+		$data_attr = sprintf($data_attr, $data);
 
 		$load = [
 			'cm_css'		=> array_keys($this->cm_css),
 			'cm_js'			=> array_keys($this->cm_js),
 			'ext_css'		=> array_keys($this->ext_css),
 			'ext_js'		=> array_keys($this->ext_js),
-			'cm'			=> array_keys($this->cm_keys),
-			'ext'			=> array_keys($this->ext_keys),
-			'custom_css'	=> array_keys($this->custom_keys),
+			'custom_css'	=> array_keys($this->custom_css),
 			'custom_js'		=> array_keys($this->custom_js),
-			'themes' 		=> array_keys($this->theme_keys),
-			'modes'			=> array_keys($this->mode_keys),
-			'keymaps' 		=> array_keys($this->keymap_keys),
-			'addons'		=> array_keys($this->addon_keys),
 		];
 
 		return [
-			'mode'				=> $this->mode,
-			'theme'				=> $this->theme,
-			'data_attr'			=> $this->get_data_attr(),
-			'cm_version_param'	=> '?v=' . $version,
-			'cm_version'		=> $version,
-			'cm_path'			=> $this->get_cm_path(),
+			'mode'				=> $mode,
+			'modes'				=> array_keys($this->mode_keys),
+			'theme'				=> $theme ?? 'default',
+			'themes'			=> array_keys($this->theme_keys),
+			'keymap'			=> $keymap ?? 'default',
+			'keymaps'			=> array_keys($this->keymap_keys),
+			'data_attr'			=> $data_attr,
+			'cm_version_param'	=> '?v=' . $this->version,
+			'cm_version'		=> $this->version,
+			'cm_path'			=> $this->ext_root_path . cnst::CODEMIRROR_DIR,
+			'valid_config'		=> $valid_config,
 			'load'				=> $load,
 		];	
-	}	
-
-	public function get_data_attr():string 
-	{
-		$data = [
-			'config' => [
-				'lineNumbers' 	=> true,
-				'matchBrackets' => true,
-				'extraKeys'		=> [
-					'F11'	=> "marttiphpbbToggleFullScreen",
-					'Esc'	=> "marttiphpbbExitFullScreen",
-					'Ctrl-Alt-B'	=> "marttiphpbbToggleBorder"
-				],
-				'theme'			=> $this->theme ?? 'night',
-				'mode'			=> $this->mode,
-			],
-			'historyId'	=> 'aaaa',
-		];
-
-		$data_attr = ' data-marttiphpbb-codemirror="%s"';
-		$data = htmlspecialchars(json_encode($data), ENT_QUOTES, 'UTF-8');
-		return sprintf($data_attr, $data);
 	}
-
-	public function get_cm_path():string 
+	
+	private function load_cm_file_dep(string $file)
 	{
-		return $this->ext_root_path . cnst::CODEMIRROR_DIR;
-	}
-
-	public function select_keymap(string $keymap)
-	{
-		$this->keymap = $keymap;
-		$this->keymap($keymap);
-	}
-
-	public function all_keymaps()
-	{
-		$this->keymaps(dep::KEYMAPS);
-	}
-
-	public function keymaps(array $keymaps)
-	{
-		foreach($keymaps as $keymap)
+		if (isset(dep::FILES[$file]))
 		{
-			$this->keymap($keymap);
+			foreach(dep::FILES[$file] as $f)
+			{
+				$this->cm_js[$f] = true;
+				$this->load_cm_file_dep($f);
+			}
 		}
 	}
 
-	public function keymap(string $keymap)
+	public function set_extra_key(string $key, string $command)
+	{
+		$extra_keys = $this->get_option('extraKeys');
+		$extra_keys[$key] = $command;
+		$this->set_option('extraKeys', $extra_keys);
+	}
+
+	public function get_extra_key(string $key)
+	{
+		return $this->get_option('extraKeys')[$key] ?? null;
+	}
+
+	public function set_theme(string $theme)
+	{
+		$this->set_option('theme', $theme);
+	}
+
+	public function get_theme(string $theme):string
+	{
+		return $this->get_option($theme) ?? 'default';
+	}
+
+	public function set_mode(string $mode)
+	{
+		if (isset(dep::MODES[$mode]))
+		{
+			$this->set_option('mode', $mode);
+			$this->enabled = true;
+			return;		
+		}
+
+		if (isset(dep::MIMES[$mode]))
+		{
+			$this->set_option('mode', $mode);
+			$this->enabled = true;
+			return;
+		}
+
+		if (isset(dep::NAMES_TO_MIMES[$mode]))
+		{
+			$mode = dep::NAMES_TO_MIMES[$mode][0];
+			$this->set_option('mode', $mode);
+			$this->enabled = true;
+			return;
+		}
+	}
+
+	public function get_mode()
+	{
+		return $this->get_option('mode');
+	}
+
+	public function set_keymap(string $keymap)
+	{
+		$this->set_option('keyMap', $keymap);
+	}
+
+	public function get_keymap():string 
+	{
+		return $this->get_option('keyMap') ?? 'default';
+	}
+
+	public function load_keymap(string $keymap)
 	{
 		$this->cm_js[dep::KEYMAPS[$keymap]] = true;
 		$this->keymap_keys[$keymap] = true;
 	}
 
-	public function select_mode(string $mode)
-	{
-		$this->mode = $mode;
-		$this->mode($mode);
-	}
-
-	public function all_modes()
-	{
-		$this->modes($this->available->get_modes());
-	}
-
-	public function modes(array $modes)
-	{
-		foreach($modes as $mode)
-		{
-			$this->mode($mode);
-		}
-	}
-
-	public function mode(string $mode)
+	public function load_mode(string $mode)
 	{
 		$this->mode_keys[$mode] = true;
-		$this->cm_js[dep::MODES[$mode]] = $mode;
+		$this->cm_js[dep::MODES[$mode]] = true;
 	}
 
-	public function select_theme(string $theme)
+	public function load_all_themes()
 	{
-		$this->theme = $theme;
-		$this->theme($theme);
-	}
-
-	public function all_themes()
-	{
-		$this->themes($this->available->get_themes());
-	}
-
-	public function themes(array $themes)
-	{
-		foreach($themes as $theme)
+		foreach(dep::THEMES as $theme => $loc)
 		{
-			$this->theme($theme);
+			$this->load_theme($theme);
 		}
 	}
 
-	public function theme(string $theme)
+	public function load_theme(string $theme)
 	{
 		$this->theme_keys[$theme] = true;
-		$this->cm_css[dep::THEMES[$theme]] = $theme;		
+		$this->cm_css[dep::THEMES[$theme]] = true;		
 	}
 
-	public function addons(array $addons)
-	{
-		foreach($addons as $addon)
-		{
-			$this->addon($addon);
-		}
-	}
-
-	public function addon(string $addon)
+	public function load_addon(string $addon)
 	{
 		$this->addon_keys[$addon] = true;
-		$this->cm_keys['addon/' . $addon . '.js'] = true;
-
-//		$this->cm_js[dep::]
-
-		if (isset(self::ADDON_CSS[$addon]))
-		{
-			$this->cm_keys['addon/' . $addon . '.css'] = true;
-		}
+		$this->cm_js[dep::ADDONS[$addon]] = true;
 	}
 
-	public function history_id(string $history_id)
+	public function load_ext(string $ext)
+	{
+		$this->ext_js[$ext] = true;
+	}
+
+	public function load_custom_js(string $custom_js)
+	{
+		$this->custom_js[$custom_js] = true;
+	}
+
+	public function load_custom_css(string $custom_css)
+	{
+		$this->custom_css[$custom_css] = true;
+	}
+
+	public function set_history_id(string $history_id)
 	{
 		$this->history_id = $history_id;
-	}
-
-	public function border()
-	{
-		$this->border = true;
 	}
 }

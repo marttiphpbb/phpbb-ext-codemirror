@@ -2,13 +2,19 @@
     {%- block explain -%}{%- endblock -%}
 {%- endset -%}
 
+{%- set overwrite_label -%}
+    {%- block label -%}
+        {{- lang('ACP_MARTTIPHPBB_CODEMIRROR_THEME') -}}
+    {%- endblock label -%}
+{%- endset -%}
+
 {%- embed '@marttiphpbb_codemirror/include/select.html' with {
-        'options': marttiphpbb_codemirror.load.themes,
+        'options': marttiphpbb_codemirror.themes,
         'selected': marttiphpbb_codemirror.theme,
     }
 -%}
     {%- block name -%}theme{%- endblock -%}
-    {%- block label -%}{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_THEME') -}}{%- endblock -%}
+    {%- block label -%}{{- overwrite_label -}}{%- endblock -%}
     {%- block explain -%}{{- overwrite_explain -}}{%- endblock -%}
 {%- endembed -%}
 

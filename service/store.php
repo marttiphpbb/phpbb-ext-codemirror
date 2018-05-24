@@ -74,5 +74,4 @@ class store
 		$this->data[$key] = $value;
 		$this->write();
 	}
-
 }

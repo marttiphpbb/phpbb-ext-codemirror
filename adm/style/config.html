@@ -11,8 +11,11 @@
 {%- block form_content -%}
 	<fieldset>
 		{%- embed '@marttiphpbb_codemirror/include/theme_select.html' -%}
+			{%- block label -%}
+				{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_TRY_THEME') -}}
+			{%- endblock label -%}
 			{%- block explain -%}
-				<br>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_THEME_EXPLAIN') -}}
+				<br>{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_TRY_THEME_EXPLAIN') -}}
 			{%- endblock explain -%}
 		{%- endembed -%}
 
@@ -21,5 +24,10 @@
 		</textarea>
 	</fieldset>
 
-	{%- include '@marttiphpbb_codemirror/include/submit_buttons.html' -%}
+	{%- embed '@marttiphpbb_codemirror/include/submit_buttons.html' -%}
+		{%- block extra_buttons -%}
+			<input class="button2" type="button" id="restore" name="restore" value="{{- lang('ACP_MARTTIPHPBB_CODEMIRROR_RESTORE_DEFAULTS') -}}">
+		{%- endblock extra_buttons -%}
+	{%- endembed -%}
+
 {%- endblock form_content -%}

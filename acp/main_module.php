@@ -45,21 +45,14 @@ class main_module
 						trigger_error('FORM_INVALID');
 					}
 
-
-
 					trigger_error($language->lang(cnst::L_ACP . '_CONFIG_SAVED') . adm_back_link($this->u_action));
 				}
 
+				$load->set_mode('json');
+				$load->load_all_themes();
 
-
-				$load->select_mode('javascript');
-//				$load->all_modes();
-//				$load->all_keymaps();
-				$load->all_themes();
-				$load->border();
-
-	
-
+				$config = file_get_contents(__DIR__ . '/../default_config.json');
+				
 				$template->assign_var('CONFIG', $config);
 	
 				break;
