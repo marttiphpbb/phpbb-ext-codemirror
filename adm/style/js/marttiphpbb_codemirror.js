@@ -2,6 +2,7 @@
 	$('document').ready(function () {
         const storagePrefix = 'marttiphpb_codemirror_';
         var $textarea = $('textarea[data-marttiphpbb-codemirror]')[0];
+        var content = $($textarea).val();
         if ($textarea){
             var data = $($textarea).data('marttiphpbb-codemirror');
             var codeMirror = CodeMirror.fromTextArea($textarea, data.config);           
@@ -47,7 +48,15 @@
                 } else {
                     codeMirror.setOption('marttiphpbbBorderEnabled', false);
                 }
-            });      
+            });
+            $('#reset').click(function(){
+                codeMirror.setValue(content);
+            });
+            if (data.defaultContent){
+                $('#restore').click(function(){
+                    codeMirror.setValue(data.defaultContent);
+                }); 
+            }
             window.marttiphpbbCodeMirror = codeMirror;
         }
 	});

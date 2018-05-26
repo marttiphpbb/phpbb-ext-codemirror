@@ -41,13 +41,35 @@ class main_module
 						trigger_error('FORM_INVALID');
 					}
 
-					$config = trim($request->variable('config', ''));
-
+					$config = $request->variable('config', '', true);
+					$config = htmlspecialchars_decode($config);
 					$json = json_decode($config, true);
 
 					if (!isset($json))
 					{
-						trigger_error($language->lang(cnst::L_ACP . '_INVALID_JSON') . adm_back_link($this->u_action), E_USER_WARNING);
+						switch (json_last_error()) 
+						{
+							case JSON_ERROR_DEPTH:
+								$err = cnst::L_ACP . '_JSON_ERROR_DEPTH';
+							break;
+							case JSON_ERROR_STATE_MISMATCH:
+								$err = cnst::L_ACP . '_JSON_ERROR_STATE_MISMATCH';
+							break;
+							case JSON_ERROR_CTRL_CHAR:
+								$err = cnst::L_ACP . '_JSON_ERROR_CTRL_CHAR';
+							break;
+							case JSON_ERROR_SYNTAX:
+								$err = cnst::L_ACP . '_JSON_ERROR_SYNTAX';
+							break;
+							case JSON_ERROR_UTF8:
+								$err = cnst::L_ACP . '_JSON_ERROR_UTF8';
+							break;
+							default:
+								$err = cnst::L_ACP . '_JSON_ERROR_UNKNOWN';
+							break;
+						}
+
+						trigger_error($language->lang($err) . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
 					$store->set('config', $config);
@@ -55,19 +77,18 @@ class main_module
 					trigger_error($language->lang(cnst::L_ACP . '_CONFIG_SAVED') . adm_back_link($this->u_action));
 				}
 
+				$default_content = file_get_contents(__DIR__ . '/../default_config.json');
+
 				$load->set_mode('json');
 				$load->load_all_themes();
+				$load->set_history_id('marttiphpbb_codemirror_configuration');
+				$load->set_default_content($default_content);
 
 				$config = $store->get('config');
-		
-				if (!$config)
-				{
-					$config = file_get_contents(__DIR__ . '/../default_config.json');
-				}
-
-				$template->assign_var('CONFIG', $config);
 	
-				break;
+				$template->assign_var('CONFIG', $config ?? $default_content);
+	
+			break;
 		}
 
 		$template->assign_var('U_ACTION', $this->u_action);

@@ -35,13 +35,19 @@ class load
 	private $custom_css = [];
 	private $custom_js = [];
 	private $mode_keys = [];
-	private $theme_keys = [];
-	private $keymap_keys = [];
+	private $theme_keys = [
+		'default'	=> true,
+	];
+	private $keymap_keys = [
+		'default'	=> true,
+	];
 	private $addon_keys = [];
 	private $config;
 	private $valid_config = true;
 	private $version;
 	private $enabled = false;
+	private $history_id;
+	private $default_content;
 
 	public function __construct(
 		store $store,
@@ -220,6 +226,11 @@ class load
 			$data['historyId'] = $this->history_id;
 		}
 
+		if (isset($this->default_content))
+		{
+			$data['defaultContent'] = $this->default_content;
+		}
+
 		$data_attr = ' data-marttiphpbb-codemirror="%s"';
 		$data = htmlspecialchars(json_encode($data), ENT_QUOTES, 'UTF-8');
 		$data_attr = sprintf($data_attr, $data);
@@ -373,5 +384,10 @@ class load
 	public function set_history_id(string $history_id)
 	{
 		$this->history_id = $history_id;
+	}
+
+	public function set_default_content(string $default_content)
+	{
+		$this->default_content = $default_content;
 	}
 }

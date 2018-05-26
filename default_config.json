@@ -6,7 +6,9 @@
       "F11": "marttiphpbbToggleFullScreen",
       "Esc": "marttiphpbbDisableFullScreen",
       "Ctrl-Alt-B": "marttiphpbbToggleBorder",
-      "Ctrl-S": "marttiphpbbSubmit"
+      "Ctrl-S": "marttiphpbbSubmit",
+      "Alt-G": "jumpToLine",
+      "Ctrl-F": "search"
     },
     "matchBrackets": true,
     "autoCloseBrackets": true,
