@@ -81,7 +81,6 @@ class main_module
 
 				$load->set_mode('json');
 				$load->load_all_themes();
-				$load->set_history_id('marttiphpbb_codemirror_configuration');
 				$load->set_default_content($default_content);
 
 				$config = $store->get('config');

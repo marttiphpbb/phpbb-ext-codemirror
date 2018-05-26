@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "fba49f3e635eba3afdda48be6b6cae6b",
+    "content-hash": "48d7a2341609447034f71f100554309c",
     "packages": [
         {
             "name": "bower-asset/codemirror",
