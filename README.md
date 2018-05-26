@@ -1,5 +1,7 @@
 # PhpBB Extension - marttiphpbb CodeMirror (helper ext)
 
+[Topic on phpBB.com](https://www.phpbb.com/community/viewtopic.php?f=456&t=2473266)
+
 ## Requirements
 
 phpBB 3.2+ PHP 7+
@@ -70,9 +72,67 @@ You can install this on the latest release of phpBB 3.2 by following the steps b
 
 * Report bugs and other issues to the [Issue Tracker](https://github.com/marttiphpbb/phpbb-ext-codemirror/issues).
 
+## For extension developers: how to use
+
+### In the ACP controller: 
+
+```php
+class main_module
+{
+	var $u_action;
+
+	function main($id, $mode)
+	{
+		global $phpbb_container;
+
+		$ext_manager = $phpbb_container->get('ext.manager');
+		$template = $phpbb_container->get('template');
+		
+		// ...
+		
+		switch($mode)
+		{
+			case 'your_mode':
+
+				//..
+				
+				if ($request->is_set_post('submit'))
+				{
+					// ...
+				}
+
+
+				//...
+
+				if ($ext_manager->is_enabled('marttiphpbb/codemirror'))
+				{
+					$load = $phpbb_container->get('marttiphpbb.codemirror.load');
+					$load->set_mode('json'); // or javascript, css, html, php, markdown, etc.s
+				}
+				
+				$template->assign_vars([
+					'CONTENT'	=> $content,  // retrieve or set somewhere above.
+					'U_ACTION'	=> $this->u_action,
+				]);
+	
+			break;
+		}
+	}
+}
+```
+
+ACP Template
+
+```twig
+<textarea name="content" id="content"{{- marttiphpbb_codemirror.data_attr ?? '' -}>
+    {{- CONTENT -}}
+</textarea>
+```
+
+When this extension is enabled, the `<textarea>` will be hidden and instead a CodeMirror instance is shown. Note that the dashes in `{{- CONTENT -}}` are important. Otherwise unwanted whitespace will be inserted.
+
 ## License
 
 [GPL-2.0](license.txt)
 
 ([CodeMirror](http://codemirror.net) is licensed under MIT.)
-
