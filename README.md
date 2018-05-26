@@ -11,7 +11,7 @@ The extension tries to load all required dependencies by inspecting a configurat
 
 ## Screenshot
 
-![Configuration](configuration.png)
+![Configuration](doc/configuration.png)
 
 ## Extra Options and Commands
 
