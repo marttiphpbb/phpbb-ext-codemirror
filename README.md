@@ -6,7 +6,7 @@ phpBB 3.2+ PHP 7+
 
 ## Features
 
-This phpBB extension provides a basic integration of the CodeMirror code editor for use in the ACP by other extensions. See [CodeMirror configuration](http://codemirror.net/doc/manual.html#config) for the possible options and commands.
+This phpBB extension provides a basic integration of the [CodeMirror](http://codemirror.net) code editor for use in the ACP by other extensions. See [CodeMirror configuration](http://codemirror.net/doc/manual.html#config) for the possible options and commands.
 The extension tries to load all required dependencies by inspecting a configuration set in JSON format.
 
 ## Screenshot
