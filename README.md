@@ -4,7 +4,7 @@
 
 ## Requirements
 
-phpBB 3.2+ PHP 7+
+phpBB 3.2.1+ PHP 7+
 
 ## Features
 
