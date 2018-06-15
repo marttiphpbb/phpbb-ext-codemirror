@@ -17,19 +17,14 @@ class store
 	const KEY = cnst::ID;
 	const CACHE_KEY = '_' . self::KEY;
 
-	/** @var config_text */
-	private $config_text;
-
-	/** @var cache */
-	private $cache;
-	
-	/** @var array */
-	private $data = [];
+	protected $config_text;
+	protected $cache;
+	protected $data = [];
 
 	public function __construct(config_text $config_text, cache $cache)
 	{
-		$this->config_text = $config_text;	
-		$this->cache = $cache;		
+		$this->config_text = $config_text;
+		$this->cache = $cache;
 	}
 
 	private function load()
@@ -39,13 +34,13 @@ class store
 			return;
 		}
 
-		$this->data = $this->cache->get(self::CACHE_KEY);		
-		
+		$this->data = $this->cache->get(self::CACHE_KEY);
+
 		if ($this->data)
 		{
 			return;
 		}
-		
+
 		$this->data = unserialize($this->config_text->get(self::KEY));
 		$this->cache->put(self::CACHE_KEY, $this->data);
 	}
@@ -56,7 +51,7 @@ class store
 		$this->cache->put(self::CACHE_KEY, $this->data);
 	}
 
-	public function get_all():array 
+	public function get_all():array
 	{
 		$this->load();
 		return $this->data;

@@ -15,39 +15,33 @@ use marttiphpbb\codemirror\util\dependencies as dep;
 
 class load
 {
-	/** @var store */
-	private $store;
-
-	/** @var string */
-	private $phpbb_root_path;
-
-	/** @var string */
-	private $ext_root_path;
-
-	private $cm_css = [
+	protected $store;
+	protected $phpbb_root_path;
+	protected $ext_root_path;
+	protected $cm_css = [
 		'lib/codemirror'	=> true,
 	];
-	private $cm_js = [
+	protected $cm_js = [
 		'lib/codemirror'	=> true,
 	];
-	private $ext_css = [];
-	private $ext_js = [];
-	private $custom_css = [];
-	private $custom_js = [];
-	private $mode_keys = [];
-	private $theme_keys = [
+	protected $ext_css = [];
+	protected $ext_js = [];
+	protected $custom_css = [];
+	protected $custom_js = [];
+	protected $mode_keys = [];
+	protected $theme_keys = [
 		'default'	=> true,
 	];
-	private $keymap_keys = [
+	protected $keymap_keys = [
 		'default'	=> true,
 	];
-	private $addon_keys = [];
-	private $config;
-	private $valid_config = true;
-	private $version;
-	private $enabled = false;
-	private $history_id;
-	private $default_content;
+	protected $addon_keys = [];
+	protected $config;
+	protected $valid_config = true;
+	protected $version;
+	protected $enabled = false;
+	protected $history_id;
+	protected $default_content;
 
 	public function __construct(
 		store $store,
@@ -56,7 +50,7 @@ class load
 	{
 		$this->store = $store;
 		$this->phpbb_root_path = $phpbb_root_path;
-		$this->ext_root_path = $this->phpbb_root_path . cnst::EXT_PATH;	
+		$this->ext_root_path = $this->phpbb_root_path . cnst::EXT_PATH;
 	}
 
 	public function is_enabled():bool
@@ -72,7 +66,7 @@ class load
 			$this->version = $data['version'];
 			$config = $data['config'];
 			$this->config = json_decode($config, true);
-	
+
 			if (!isset($this->config))
 			{
 				$this->valid_config = false;
@@ -94,7 +88,7 @@ class load
 		return $this->config[$option] ?? null;
 	}
 
-	public function get_listener_data():array 
+	public function get_listener_data():array
 	{
 		if (!$this->enabled)
 		{
@@ -119,9 +113,9 @@ class load
 				{
 					$this->mode_keys[$value] = true;
 					$this->cm_js[dep::MODES[$value]] = true;
-					continue;					
+					continue;
 				}
-				
+
 				if (isset(dep::MIMES[$value]))
 				{
 					$this->mode_keys[$value] = true;
@@ -147,13 +141,13 @@ class load
 					{
 						$this->cm_js[dep::COMMANDS[$command]] = true;
 					}
-					
+
 					if (isset(dep::EXT_COMMANDS[$command]))
 					{
 						$this->ext_js[dep::EXT_COMMANDS[$command]] = true;
 					}
 				}
-	
+
 				continue;
 			}
 
@@ -204,7 +198,7 @@ class load
 		foreach ($this->cm_js as $file => $b)
 		{
 			if (isset(dep::CSS[$file]))
-			{			
+			{
 				$this->cm_css[$file] = true;
 			}
 		}
@@ -257,9 +251,9 @@ class load
 			'cm_path'			=> $this->ext_root_path . cnst::CODEMIRROR_DIR,
 			'valid_config'		=> $valid_config,
 			'load'				=> $load,
-		];	
+		];
 	}
-	
+
 	private function load_cm_file_dep(string $file)
 	{
 		if (isset(dep::FILES[$file]))
@@ -300,7 +294,7 @@ class load
 		{
 			$this->set_option('mode', $mode);
 			$this->enabled = true;
-			return;		
+			return;
 		}
 
 		if (isset(dep::MIMES[$mode]))
@@ -329,7 +323,7 @@ class load
 		$this->set_option('keyMap', $keymap);
 	}
 
-	public function get_keymap():string 
+	public function get_keymap():string
 	{
 		return $this->get_option('keyMap') ?? 'default';
 	}
@@ -357,7 +351,7 @@ class load
 	public function load_theme(string $theme)
 	{
 		$this->theme_keys[$theme] = true;
-		$this->cm_css[dep::THEMES[$theme]] = true;		
+		$this->cm_css[dep::THEMES[$theme]] = true;
 	}
 
 	public function load_addon(string $addon)

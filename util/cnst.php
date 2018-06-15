@@ -23,6 +23,4 @@ class cnst
 	const MODE_DIR = self::CODEMIRROR_DIR . 'mode/';
 	const KEYMAP_DIR = self::CODEMIRROR_DIR . 'keymap/';
 	const ADDON_DIR = self::CODEMIRROR_DIR . 'addon/';
-
-
 }

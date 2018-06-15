@@ -11,6 +11,13 @@ use marttiphpbb\codemirror\service\store;
 
 class v_0_1_0 extends \phpbb\db\migration\migration
 {
+	static public function depends_on()
+	{
+		return [
+			'\phpbb\db\migration\data\v32x\v321',
+		];
+	}
+
 	public function update_data()
 	{
 		$package_json = file_get_contents(__DIR__ . '/../codemirror/package.json');
@@ -24,7 +31,7 @@ class v_0_1_0 extends \phpbb\db\migration\migration
 		];
 
 		return [
-			['config_text.add', [store::KEY, serialize($data)]],			
+			['config_text.add', [store::KEY, serialize($data)]],
 
 			['module.add', [
 				'acp',
