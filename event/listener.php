@@ -14,12 +14,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
 {
-	/** @var load */
 	private $load;
 
-	/**
-	 * @param load
-	*/
 	public function __construct(load $load)
 	{
 		$this->load = $load;
