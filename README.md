@@ -61,7 +61,6 @@ You can install this on the latest release of phpBB 3.2 by following the steps b
 * Create `marttiphpbb/codemirror` in the `ext` directory.
 * Download and unpack the repository into `ext/marttiphpbb/codemirror`
 * Enable `CodeMirror (helper ext)` in the ACP at `Customise -> Manage extensions`.
-* You can start editing the CodeMirror in the Forum ACP for each Forum.
 
 ## Uninstall
 
@@ -74,7 +73,7 @@ You can install this on the latest release of phpBB 3.2 by following the steps b
 
 ## For extension developers: how to use
 
-### In the ACP controller: 
+### In the ACP controller:
 
 ```php
 class main_module
@@ -87,15 +86,15 @@ class main_module
 
 		$ext_manager = $phpbb_container->get('ext.manager');
 		$template = $phpbb_container->get('template');
-		
+
 		// ...
-		
+
 		switch($mode)
 		{
 			case 'your_mode':
 
 				//..
-				
+
 				if ($request->is_set_post('submit'))
 				{
 					// ...
@@ -109,12 +108,12 @@ class main_module
 					$load = $phpbb_container->get('marttiphpbb.codemirror.load');
 					$load->set_mode('json'); // or javascript, css, html, php, markdown, etc.s
 				}
-				
+
 				$template->assign_vars([
 					'CONTENT'	=> $content,  // retrieve or set somewhere above.
 					'U_ACTION'	=> $this->u_action,
 				]);
-	
+
 			break;
 		}
 	}
