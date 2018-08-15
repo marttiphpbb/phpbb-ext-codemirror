@@ -1,23 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48d7a2341609447034f71f100554309c",
+    "content-hash": "68017fde8d22025cdc603979438fb9df",
     "packages": [
         {
             "name": "bower-asset/codemirror",
-            "version": "5.37.0",
+            "version": "5.39.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/codemirror.git",
-                "reference": "ca0b10af7b61a35369f011244e3905bf97e241ab"
+                "reference": "d9a1b1579e80944abc48d9a778d7196480475050"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/codemirror/zipball/ca0b10af7b61a35369f011244e3905bf97e241ab",
-                "reference": "ca0b10af7b61a35369f011244e3905bf97e241ab",
+                "url": "https://api.github.com/repos/components/codemirror/zipball/d9a1b1579e80944abc48d9a778d7196480475050",
+                "reference": "d9a1b1579e80944abc48d9a778d7196480475050",
                 "shasum": null
             },
             "type": "bower-asset"

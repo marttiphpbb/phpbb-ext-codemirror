@@ -123,7 +123,7 @@ class main_module
 ACP Template
 
 ```twig
-<textarea name="content" id="content"{{- marttiphpbb_codemirror.data_attr ?? '' -}>
+<textarea name="content" id="content"{{- marttiphpbb_codemirror.data_attr ?? '' -}}>
     {{- CONTENT -}}
 </textarea>
 ```
