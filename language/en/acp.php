@@ -18,10 +18,10 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 
-	'ACP_MARTTIPHPBB_CODEMIRROR_CONFIG_EXPLAIN'			
-		=> 'This extension provides a basic integration of CodeMirror for use in the ACP 
+	'ACP_MARTTIPHPBB_CODEMIRROR_CONFIG_EXPLAIN'
+		=> 'This extension provides a basic integration of CodeMirror for use
 			by other extensions. See <a href="http://codemirror.net/doc/manual.html#config">
-			CodeMirror configuration</a> and 
+			CodeMirror configuration</a> and
 			<a href="https://github.com/marttiphpbb/phpbb-ext-codemirror">
 			configuration options defined by this extension</a> for all possible options.',
 	'ACP_MARTTIPHPBB_CODEMIRROR_VERSION'			=> '<a href="http://codemirror.net">CodeMirror</a> version: %s',
