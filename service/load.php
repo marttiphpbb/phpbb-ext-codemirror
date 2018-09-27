@@ -167,6 +167,14 @@ class load
 				$this->ext_js[dep::EXT_OPTIONS[$option]] = true;
 				continue;
 			}
+
+			if ($option === 'colorpicker')
+			{
+				$colorpicker_base = $this->ext_root_path . cnst::COLORPICKER_DIR;
+				$colorpicker_base .= 'dist/codemirror-colorpicker';
+				$this->custom_css[$colorpicker_base . '.css'] = true;
+				$this->custom_js[$colorpicker_base . '.min.js'] = true;
+			}
 		}
 
 		foreach ($this->ext_js as $file => $b)

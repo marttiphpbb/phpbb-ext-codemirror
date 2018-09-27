@@ -18,5 +18,6 @@
     "newlineAndIndentContinueMarkdownList": true,
     "foldGutter": true,
     "styleActiveLine": true,
-    "marttiphpbbBorderEnabled": true
+    "marttiphpbbBorderEnabled": true,
+    "colorpicker": true
 }
