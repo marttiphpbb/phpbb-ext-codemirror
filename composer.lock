@@ -4,36 +4,36 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68017fde8d22025cdc603979438fb9df",
+    "content-hash": "3963d7fd480dd3e3fb4c3bec88278965",
     "packages": [
         {
             "name": "bower-asset/codemirror",
-            "version": "5.39.2",
+            "version": "5.40.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/components/codemirror.git",
-                "reference": "d9a1b1579e80944abc48d9a778d7196480475050"
+                "url": "https://github.com/codemirror/CodeMirror.git",
+                "reference": "feaf587175e7c5b9a59454e0b8fa6bac1d36d61e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/codemirror/zipball/d9a1b1579e80944abc48d9a778d7196480475050",
-                "reference": "d9a1b1579e80944abc48d9a778d7196480475050",
+                "url": "https://api.github.com/repos/codemirror/CodeMirror/zipball/feaf587175e7c5b9a59454e0b8fa6bac1d36d61e",
+                "reference": "feaf587175e7c5b9a59454e0b8fa6bac1d36d61e",
                 "shasum": null
             },
             "type": "bower-asset"
         },
         {
             "name": "composer/installers",
-            "version": "v1.5.0",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/installers.git",
-                "reference": "049797d727261bf27f2690430d935067710049c2"
+                "reference": "cfcca6b1b60bc4974324efb5783c13dca6932b5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/installers/zipball/049797d727261bf27f2690430d935067710049c2",
-                "reference": "049797d727261bf27f2690430d935067710049c2",
+                "url": "https://api.github.com/repos/composer/installers/zipball/cfcca6b1b60bc4974324efb5783c13dca6932b5b",
+                "reference": "cfcca6b1b60bc4974324efb5783c13dca6932b5b",
                 "shasum": ""
             },
             "require": {
@@ -140,7 +140,7 @@
                 "zend",
                 "zikula"
             ],
-            "time": "2017-12-29T09:13:20+00:00"
+            "time": "2018-08-27T06:10:37+00:00"
         },
         {
             "name": "oomphinc/composer-installers-extender",
