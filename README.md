@@ -81,45 +81,45 @@ You can install this on the latest release of phpBB 3.2 by following the steps b
 ```php
 class main_module
 {
-	var $u_action;
+    var $u_action;
 
-	function main($id, $mode)
-	{
-		global $phpbb_container;
+    function main($id, $mode)
+    {
+        global $phpbb_container;
 
-		$ext_manager = $phpbb_container->get('ext.manager');
-		$template = $phpbb_container->get('template');
+        $ext_manager = $phpbb_container->get('ext.manager');
+        $template = $phpbb_container->get('template');
 
-		// ...
+        // ...
 
-		switch($mode)
-		{
-			case 'your_mode':
+        switch($mode)
+        {
+            case 'your_mode':
 
-				//..
+                //..
 
-				if ($request->is_set_post('submit'))
-				{
-					// ...
-				}
+                if ($request->is_set_post('submit'))
+                {
+                    // ...
+                }
 
 
-				//...
+                //...
 
-				if ($ext_manager->is_enabled('marttiphpbb/codemirror'))
-				{
-					$load = $phpbb_container->get('marttiphpbb.codemirror.load');
-					$load->set_mode('json'); // or javascript, css, html, php, markdown, etc.s
-				}
+                if ($ext_manager->is_enabled('marttiphpbb/codemirror'))
+                {
+                    $load = $phpbb_container->get('marttiphpbb.codemirror.load');
+                    $load->set_mode('json'); // or javascript, css, html, php, markdown, etc.s
+                }
 
-				$template->assign_vars([
-					'CONTENT'	=> $content,  // retrieve or set somewhere above.
-					'U_ACTION'	=> $this->u_action,
-				]);
+                $template->assign_vars([
+                    'CONTENT'  => $content,  // retrieve or set somewhere above.
+                    'U_ACTION' => $this->u_action,
+                ]);
 
-			break;
-		}
-	}
+            break;
+        }
+    }
 }
 ```
 
