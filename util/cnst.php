@@ -17,7 +17,7 @@ class cnst
 	const L_MCP = 'MCP_' . self::L;
 	const TPL = '@' . self::ID . '/';
 	const EXT_PATH = 'ext/' . self::FOLDER . '/';
-	const CODEMIRROR_DIR = 'codemirror/';
+	const CODEMIRROR_DIR = 'node_modules/codemirror/';
 	const LIB_DIR = self::CODEMIRROR_DIR . 'lib/';
 	const THEME_DIR = self::CODEMIRROR_DIR . 'theme/';
 	const MODE_DIR = self::CODEMIRROR_DIR . 'mode/';

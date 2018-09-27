@@ -14,10 +14,7 @@
 			"role": "Developer"
 		}],
 	"require": {
-		"php": ">=7",
-		"oomphinc/composer-installers-extender": "^1.1",
-		"npm-asset/codemirror": "^5",
-		"bower-asset/codemirror": "^5"
+		"php": ">=7.1"
 	},
 	"require-dev": {
 	},
