@@ -9,6 +9,7 @@ namespace marttiphpbb\codemirror;
 
 use phpbb\extension\base;
 use marttiphpbb\codemirror\service\store;
+use marttiphpbb\codemirror\util\cnst;
 
 class ext extends base
 {
@@ -32,7 +33,7 @@ class ext extends base
 			{
 				// if no data exists, version setting is handled by migration.
 
-				$package_json = file_get_contents(__DIR__ . '/codemirror/package.json');
+				$package_json = file_get_contents(__DIR__ . '/' . cnst::CODEMIRROR_DIR . 'package.json');
 				$version = json_decode($package_json, true)['version'];
 				$data = serialize(array_merge(unserialize($data), ['version' => $version]));
 				$config_text->set(store::KEY, $data);
@@ -41,6 +42,6 @@ class ext extends base
 			return 'codemirror_version_set';
 		}
 
-        return parent::enable_step($old_state);
+        return parent::enable_step($old_step);
 	}
 }
