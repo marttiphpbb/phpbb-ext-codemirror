@@ -20,7 +20,7 @@ class mgr_1 extends \phpbb\db\migration\migration
 
 	public function update_data()
 	{
-		$package_json = file_get_contents(__DIR__ . '/../codemirror/package.json');
+		$package_json = file_get_contents(__DIR__ . '/../' . cnst::CODEMIRROR_DIR . 'package.json');
 		$version = json_decode($package_json, true)['version'];
 
 		$default_config_json = file_get_contents(__DIR__ . '/../default_config.json');
