@@ -257,7 +257,7 @@ class load
 			'cm_version_param'	=> '?v=' . $this->version,
 			'cm_version'		=> $this->version,
 			'cm_path'			=> $this->ext_root_path . cnst::CODEMIRROR_DIR,
-			'valid_config'		=> $valid_config,
+			'valid_config'		=> $this->valid_config,
 			'load'				=> $load,
 		];
 	}
