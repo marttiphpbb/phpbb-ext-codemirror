@@ -20,11 +20,10 @@ $lang = array_merge($lang, [
 
 	'ACP_MARTTIPHPBB_CODEMIRROR_CONFIG_EXPLAIN'
 		=> 'This extension provides a basic integration of CodeMirror for use
-			by other extensions. See <a href="http://codemirror.net/doc/manual.html#config">
-			CodeMirror configuration</a> and
-			<a href="https://github.com/marttiphpbb/phpbb-ext-codemirror">
-			configuration options defined by this extension</a> for all possible options.',
-	'ACP_MARTTIPHPBB_CODEMIRROR_VERSION'			=> '<a href="http://codemirror.net">CodeMirror</a> version: %s',
+			by other extensions. See %1$sCodeMirror configuration%2$s and
+			%3$sconfiguration options defined by this extension%4$s
+			for all possible options.',
+	'ACP_MARTTIPHPBB_CODEMIRROR_VERSION'			=> '%1$sCodeMirror%2$s version: %3$s',
 	'ACP_MARTTIPHPBB_CODEMIRROR_THEME'				=> 'Theme',
 	'ACP_MARTTIPHPBB_CODEMIRROR_TRY_THEME'			=> 'Try theme',
 	'ACP_MARTTIPHPBB_CODEMIRROR_TRY_THEME_EXPLAIN'	=> 'This is to try other themes. Only "theme" defined in the json configuration below will be saved.',
