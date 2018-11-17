@@ -354,13 +354,13 @@ EOT;
 						continue;
 					}
 
-					if (strpos($line, 'keyMap.') === 0)
+					if (strpos($line, '  keyMap.') === 0)
 					{
 						$default_keymap_open = true;
 						continue;
 					}
 
-					if (strpos($line, '};') === 0)
+					if (strpos($line, '  };') === 0)
 					{
 						$default_keymap_open = false;
 					}
