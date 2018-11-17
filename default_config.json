@@ -8,7 +8,7 @@
       "Ctrl-Alt-B": "marttiphpbbToggleBorder",
       "Ctrl-S": "marttiphpbbSubmit",
       "Alt-G": "jumpToLine",
-      "Ctrl-F": "search"
+      "Ctrl-F": "find"
     },
     "matchBrackets": true,
     "autoCloseBrackets": true,
