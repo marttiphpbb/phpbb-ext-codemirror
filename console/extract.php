@@ -107,7 +107,7 @@ EOT;
 	];
 
 	const CORE_COMMAND_TAG = [
-		['  ', ': '],
+		['    ', ': '],
 	];
 
 	const OPTION_TAG = [
@@ -328,12 +328,12 @@ EOT;
 						continue;
 					}
 
-					if (strpos($line, 'var commands = {') === 0)
+					if (strpos($line, '  var commands = {') === 0)
 					{
 						$core_commands_open = true;
 					}
 
-					if (strpos($line, '};') === 0)
+					if (strpos($line, '  };') === 0)
 					{
 						$core_commands_open = false;
 					}
