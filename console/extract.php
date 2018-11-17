@@ -189,12 +189,12 @@ EOT;
 
 		$files = iterator_to_array($files);
 
-		$adm_dir = self::EXT_ROOT_PATH . 'styles/all';
+		$scan_dir = self::EXT_ROOT_PATH . 'styles/all/template';
 
 		$ext_finder = new Finder();
 		$ext_files = $ext_finder
 			->files()
-			->in($adm_dir)
+			->in($scan_dir)
 			->ignoreVCS(true)
 			->ignoreDotFiles(true)
 			->name('/\.js$|\.css$/')

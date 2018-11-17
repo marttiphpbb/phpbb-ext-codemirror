@@ -272,6 +272,7 @@ class dependencies
 	];
 
 	const DEFAULT_KEYMAP = [
+		'fallthrough' => 'basic',
 		'Cmd-U' => 'undoSelection',
 		'Shift-Cmd-U' => 'redoSelection',
 		'Ctrl-Up' => 'goLineUp',
@@ -475,7 +476,7 @@ class dependencies
 		'yaml-frontmatter' => 'mode/yaml-frontmatter/yaml-frontmatter',
 		'yaml' => 'mode/yaml/yaml',
 		'z80' => 'mode/z80/z80',
-	];	
+	];
 
 	const MIMES = [
 		'text/apl' => 'apl',
@@ -901,6 +902,9 @@ class dependencies
 		'map' => ['application/json', 'application/x-json'],
 		'jsonld' => [''],
 		'jsx' => ['text/jsx'],
+		'j2' => [''],
+		'jinja' => [''],
+		'jinja2' => [''],
 		'jl' => ['text/x-julia'],
 		'kt' => ['text/x-kotlin'],
 		'less' => ['text/x-less'],
@@ -1096,6 +1100,7 @@ class dependencies
 		'blackboard' => 'theme/blackboard',
 		'cobalt' => 'theme/cobalt',
 		'colorforth' => 'theme/colorforth',
+		'darcula' => 'theme/darcula',
 		'dracula' => 'theme/dracula',
 		'duotone-dark' => 'theme/duotone-dark',
 		'duotone-light' => 'theme/duotone-light',
