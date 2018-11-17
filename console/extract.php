@@ -57,7 +57,7 @@ class dependencies
 %c_default_keymap%];
 
 	const MODES = [
-%c_modes%];	
+%c_modes%];
 
 	const MIMES = [
 %c_mimes%];
@@ -152,10 +152,10 @@ EOT;
 		$outputStyle = new OutputFormatterStyle('white', 'black', ['bold']);
 		$output->getFormatter()->setStyle('v', $outputStyle);
 
-		$outputStyle = new OutputFormatterStyle('yellow', 'default', ['bold']);
+		$outputStyle = new OutputFormatterStyle('yellow', 'blue', ['bold']);
 		$output->getFormatter()->setStyle('l', $outputStyle);
 
-		$write = $input->getOption('write');		
+		$write = $input->getOption('write');
 
 		$io->writeln([
 			'',
@@ -175,7 +175,7 @@ EOT;
 		$ext_file_dep_ary = $ext_option_dep_ary = $ext_command_dep_ary = [];
 		$ext_use_option_dep_ary = [];
 
-		$dir = self::EXT_ROOT_PATH . 'codemirror';
+		$dir = self::EXT_ROOT_PATH . cnst::CODEMIRROR_DIR;
 
 		$finder = new Finder();
 		$files = $finder
@@ -189,7 +189,7 @@ EOT;
 
 		$files = iterator_to_array($files);
 
-		$adm_dir = self::EXT_ROOT_PATH . 'adm/style';
+		$adm_dir = self::EXT_ROOT_PATH . 'styles/all';
 
 		$ext_finder = new Finder();
 		$ext_files = $ext_finder
@@ -200,7 +200,7 @@ EOT;
 			->name('/\.js$|\.css$/')
 			->sortByName();
 
-		$ext_files = iterator_to_array($ext_files);		
+		$ext_files = iterator_to_array($ext_files);
 
 		$io->writeln([
 			'File Count: ' . count($files),
@@ -223,7 +223,7 @@ EOT;
 		{
 			$rel_path = $file->getRelativePathname();
 			list($loc, $ext) = explode('.', $rel_path);
-			$loc_parts = explode('/', $loc);			
+			$loc_parts = explode('/', $loc);
 			$file_dep_ary[$loc][$ext] = true;
 			$loc_require_ary = [];
 
@@ -236,18 +236,18 @@ EOT;
 			{
 				$keymap_ary[end($loc_parts)] = $loc;
 			}
-			
+
 			if ($loc_parts[0] === 'theme' && $ext === 'css')
 			{
 				$theme_ary[end($loc_parts)] = $loc;
-			}			
+			}
 
 			if ($loc_parts[0] === 'addon' && $ext === 'js')
 			{
 				$end = end($loc_parts);
 				$prev = prev($loc_parts);
 				$addon_ary[$prev . '/' . $end] = $loc;
-			}			
+			}
 
 			if ($handle = fopen($file, 'r'))
 			{
@@ -263,14 +263,14 @@ EOT;
 						foreach ($require_ary as $require)
 						{
 							$cm_require = $this->sanitize_path($require, $loc);
-						
+
 							if ($cm_require === 'lib/codemirror')
 							{
 								continue;
 							}
-		
+
 							$require_count++;
-		
+
 							$loc_require_ary[] = $cm_require;
 						}
 					}
@@ -278,7 +278,7 @@ EOT;
 					if ($option_ary)
 					{
 						foreach ($option_ary as $option)
-						{		
+						{
 							$option_dep_ary[$option] = $loc;
 						}
 					}
@@ -286,7 +286,7 @@ EOT;
 					if ($use_option_ary)
 					{
 						foreach ($use_option_ary as $use_option)
-						{		
+						{
 							$use_option_dep_ary[$loc][$use_option] = true;
 						}
 					}
@@ -294,7 +294,7 @@ EOT;
 					if ($command_ary)
 					{
 						foreach ($command_ary as $command)
-						{		
+						{
 							$command = trim($command);
 							$command_dep_ary[$command] = $loc;
 						}
@@ -305,7 +305,7 @@ EOT;
 						if (strpos($line, '  CodeMirror.modeInfo = [') === 0)
 						{
 							$mode_meta_open = true;
-							continue;						
+							continue;
 						}
 						if (strpos($line, '  ];') === 0)
 						{
@@ -349,7 +349,7 @@ EOT;
 						}
 
 						$core_command_ary[] = $command;
-						$c_core_commands .= $this->get_c_key_value_line($command, 'true');		
+						$c_core_commands .= $this->get_c_key_value_line($command, 'true');
 
 						continue;
 					}
@@ -394,7 +394,7 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
@@ -414,14 +414,14 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
 			'<l>Use option deps:</>',
 			'<l>----------------</>',
-		]);	
-		
+		]);
+
 		$use_option_count = 0;
 
 		foreach ($use_option_dep_ary as $loc => $use_options_keys)
@@ -439,7 +439,7 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
@@ -459,12 +459,12 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
 			'<l>Has CSS:</>',
-			'<l>--------</>',			
+			'<l>--------</>',
 		]);
 
 		$css_count = 0;
@@ -480,16 +480,16 @@ EOT;
 		}
 		$io->writeln([
 			'CSS count: ' . $css_count,
-			'',			
+			'',
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
 			'<l>Core commands:</>',
-			'<l>--------------</>',	
+			'<l>--------------</>',
 		]);
 
 		foreach ($core_command_ary as $command)
@@ -499,23 +499,23 @@ EOT;
 		}
 		$io->writeln([
 			'Core command count: ' . count($core_command_ary),
-			'',			
+			'',
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
 			'<l>Default keymap:</>',
-			'<l>---------------</>',	
+			'<l>---------------</>',
 		]);
 
 		foreach ($default_keymap_lines as $line)
 		{
 			$line = rtrim($line, ',');
 			$key_ary = json_decode('{' . $line . '}', true);
-			$default_keymap_ary = array_merge($key_ary, $default_keymap_ary);		
+			$default_keymap_ary = array_merge($key_ary, $default_keymap_ary);
 		}
 
 		foreach ($default_keymap_ary as $key => $command)
@@ -526,11 +526,11 @@ EOT;
 
 		$io->writeln([
 			'Default keymap count: ' . count($default_keymap_ary),
-			'',			
+			'',
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
@@ -550,7 +550,7 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
@@ -566,7 +566,7 @@ EOT;
 		$mode_meta = str_replace($search, $replace, $mode_meta);
 
 		$mode_meta = '[' . $mode_meta . ']';
-		
+
 		$json = json_decode($mode_meta, true);
 
 		$mime_count = 0;
@@ -594,7 +594,7 @@ EOT;
 			{
 				$mime_count++;
 				$c_mimes .= $this->get_c_key_value_line($mime, $mode);
-				$io->writeln('<info>MIME: </>' . $mime . '<info> Mode: </><v>' . $mode . '</>');				
+				$io->writeln('<info>MIME: </>' . $mime . '<info> Mode: </><v>' . $mode . '</>');
 			}
 
 			$mimes = '[\'' . implode('\', \'', $mimes) . '\']';
@@ -621,36 +621,36 @@ EOT;
 		$io->writeln([
 			'MIME count: ' . $mime_count,
 			'',
-		]);	
+		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
 			'<l>File exts to MIMEs:</>',
 			'<l>-------------------</>',
-		]);	
-		
+		]);
+
 		foreach ($exts_to_mimes_ary as $ext => $mimes)
 		{
 			$c_exts_to_mimes .= $this->get_c_key_value_line($ext, $mimes);
 			$io->writeln('<info>ext: </>' . $ext . '<info> MIMEs: </><v>' . $mimes . '</>');
-		}					
+		}
 
 		$io->writeln([
 			'File exts count: ' . count($exts_to_mimes_ary),
 			'',
-		]);	
+		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
 			'<l>Names to MIMEs:</>',
 			'<l>---------------</>',
-		]);	
+		]);
 
 		foreach ($names_to_mimes_ary as $name => $mimes)
 		{
@@ -661,16 +661,16 @@ EOT;
 		$io->writeln([
 			'Name to MIMEs count: ' . count($names_to_mimes_ary),
 			'',
-		]);	
+		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
 			'<l>Alias to MIMEs:</>',
 			'<l>---------------</>',
-		]);	
+		]);
 
 		foreach ($alias_to_mimes_ary as $alias => $mimes)
 		{
@@ -684,7 +684,7 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
@@ -704,7 +704,7 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
@@ -724,7 +724,7 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
@@ -744,9 +744,9 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
-	
+
 		foreach ($ext_files as $file)
 		{
 			$rel_path = $file->getRelativePathname();
@@ -765,7 +765,7 @@ EOT;
 					if ($ext_option_ary)
 					{
 						foreach ($ext_option_ary as $option)
-						{		
+						{
 							$ext_option_dep_ary[$option] = $loc;
 						}
 					}
@@ -773,7 +773,7 @@ EOT;
 					if ($ext_use_option_ary)
 					{
 						foreach ($ext_use_option_ary as $use_option)
-						{		
+						{
 							$ext_use_option_dep_ary[$loc][$use_option] = true;
 						}
 					}
@@ -781,7 +781,7 @@ EOT;
 					if ($ext_command_ary)
 					{
 						foreach ($ext_command_ary as $command)
-						{		
+						{
 							$command = trim($command);
 							$ext_command_dep_ary[$command] = $loc;
 						}
@@ -793,12 +793,12 @@ EOT;
 		}
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
 			'<l>Ext CSS:</>',
-			'<l>--------</>',			
+			'<l>--------</>',
 		]);
 
 		$ext_css_count = 0;
@@ -814,11 +814,11 @@ EOT;
 		}
 		$io->writeln([
 			'Ext CSS count: ' . $ext_css_count,
-			'',			
+			'',
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
@@ -838,14 +838,14 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		$io->writeln([
 			'<l>Ext Use option deps:</>',
 			'<l>--------------------</>',
-		]);	
-		
+		]);
+
 		$ext_use_option_count = 0;
 
 		foreach ($ext_use_option_dep_ary as $loc => $use_options_keys)
@@ -863,9 +863,9 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
-	
+
 		$io->writeln([
 			'<l>Ext Command deps:</>',
 			'<l>-----------------</>',
@@ -883,23 +883,23 @@ EOT;
 		]);
 
 		/**
-		 * 
+		 *
 		 */
 
 		if ($write)
 		{
-			$search = ['%c_files%', '%c_css%', '%c_options%', 
+			$search = ['%c_files%', '%c_css%', '%c_options%',
 				'%c_commands%', '%c_use_options%',
 				'%c_core_commands%', '%c_default_keymap%',
 				'%c_modes%', '%c_keymaps%', '%c_themes%',
 				'%c_addons%',
-				'%c_mimes%', '%c_names_to_mimes%', 
+				'%c_mimes%', '%c_names_to_mimes%',
 				'%c_exts_to_mimes%', '%c_alias_to_mimes%',
 				'%c_ext_css%',
-				'%c_ext_options%', '%c_ext_commands%', 
+				'%c_ext_options%', '%c_ext_commands%',
 				'%c_ext_use_options%',
 			];
-			$replace = [$c_files . "\t", $c_css . "\t", $c_options . "\t", 
+			$replace = [$c_files . "\t", $c_css . "\t", $c_options . "\t",
 				$c_commands . "\t", $c_use_options . "\t",
 				$c_core_commands . "\t", $c_default_keymap . "\t",
 				$c_modes . "\t", $c_keymaps . "\t", $c_themes . "\t",
@@ -916,17 +916,17 @@ EOT;
 
 			$io->writeln([
 				'<l>File written: marttiphpbb/codemirror/util/dependencies.php</>',
-				'',			
+				'',
 			]);
 		}
 	}
 
-	private function sanitize_path(string $path, string $loc):string 
+	private function sanitize_path(string $path, string $loc):string
 	{
 		$loc = explode('/', $loc);
 		array_pop($loc);
 		$path = explode('/', $path);
-	
+
 		foreach ($path as $k => $p)
 		{
 			if ($p === '.')
@@ -944,7 +944,7 @@ EOT;
 		return implode('/', $loc);
 	}
 
-	private function get_c_key_value_line(string $key, string $value):string 
+	private function get_c_key_value_line(string $key, string $value):string
 	{
 		$value = (strpos($value, '[') === 0 || in_array($value, ['true', 'false'])) ? $value : '\'' . $value . '\'';
 		return "\t\t'" . $key . "' => " . $value . ",\n";
