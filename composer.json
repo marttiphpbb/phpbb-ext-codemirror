@@ -4,8 +4,8 @@
 	"description": "CodeMirror Extension for phpBB 3.2",
 	"keywords": ["phpbb", "extension", "codemirror", "helper ext"],
 	"homepage": "https://github.com/marttiphpbb/phpbb-ext-codemirror",
-	"version": "0.3.2",
-	"time": "2018-10-21",
+	"version": "0.4.0",
+	"time": "2018-11-17",
 	"license": "GPL-2.0",
 	"authors": [{
 			"name": "martti",
