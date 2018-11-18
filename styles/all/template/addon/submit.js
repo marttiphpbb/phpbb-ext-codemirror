@@ -4,6 +4,6 @@
   "use strict";
 
   CodeMirror.commands.marttiphpbbSubmit = function(cm){
-    $('input[type="submit"]').click();
+    $(cm.getInputField()).closest('form').find('input[type="submit"]').click();
   };
 });
