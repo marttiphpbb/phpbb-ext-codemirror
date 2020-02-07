@@ -1,12 +1,12 @@
 {
 	"name": "marttiphpbb/codemirror",
 	"type": "phpbb-extension",
-	"description": "CodeMirror Extension for phpBB 3.2",
+	"description": "CodeMirror Extension for phpBB 3.3",
 	"keywords": ["phpbb", "extension", "codemirror", "helper ext"],
 	"homepage": "https://github.com/marttiphpbb/phpbb-ext-codemirror",
-	"version": "0.5.0",
-	"time": "2018-11-18",
-	"license": "GPL-2.0",
+	"version": "0.6.0",
+	"time": "2020-02-07",
+	"license": "GPL-2.0-only",
 	"authors": [{
 			"name": "martti",
 			"email": "info@martti.be",
@@ -25,7 +25,7 @@
 		},
 		"display-name": "CodeMirror (helper ext)",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.2.1"
+			"phpbb/phpbb": ">=3.3"
 		},
 		"version-check": {
 			"host": "marttiphpbb.github.io",

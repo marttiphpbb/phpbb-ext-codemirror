@@ -4,7 +4,7 @@
 
 ## Requirements
 
-* phpBB 3.2.1+
+* phpBB 3.3+
 * PHP 7.1+
 
 ## Features
@@ -53,11 +53,11 @@ This command generates a click event on submit buttons:
 
 * Configuration is in JSON, so no functions can be defined.
 * Not all configuration options are working (yet).
-* Only one editor can be loaded in one page (for now).
+* Only one editor can be loaded in one page.
 
 ## Quick Install
 
-You can install this on the latest release of phpBB 3.2 by following the steps below:
+You can install this on the latest release of phpBB by following the steps below:
 
 * Create `marttiphpbb/codemirror` in the `ext` directory.
 * Download and unpack the repository into `ext/marttiphpbb/codemirror`

@@ -2,13 +2,12 @@
 
 /**
 * phpBB Extension - marttiphpbb codemirror
-* @copyright (c) 2018 marttiphpbb <info@martti.be>
+* @copyright (c) 2018 - 2020 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 */
 
 namespace marttiphpbb\codemirror\service;
 
-use phpbb\extension\manager as ext_manager;
 use marttiphpbb\codemirror\service\store;
 use marttiphpbb\codemirror\util\cnst;
 use marttiphpbb\codemirror\util\dependencies as dep;
@@ -58,7 +57,7 @@ class load
 		return $this->enabled;
 	}
 
-	private function load_data()
+	private function load_data():void
 	{
 		if (!isset($this->version))
 		{
@@ -76,7 +75,7 @@ class load
 		}
 	}
 
-	public function set_option(string $option, $value)
+	public function set_option(string $option, $value):void
 	{
 		$this->load_data();
 		$this->config[$option] = $value;
@@ -262,7 +261,7 @@ class load
 		];
 	}
 
-	private function load_cm_file_dep(string $file)
+	private function load_cm_file_dep(string $file):void
 	{
 		if (isset(dep::FILES[$file]))
 		{
@@ -274,7 +273,7 @@ class load
 		}
 	}
 
-	public function set_extra_key(string $key, string $command)
+	public function set_extra_key(string $key, string $command):void
 	{
 		$extra_keys = $this->get_option('extraKeys');
 		$extra_keys[$key] = $command;
@@ -286,7 +285,7 @@ class load
 		return $this->get_option('extraKeys')[$key] ?? null;
 	}
 
-	public function set_theme(string $theme)
+	public function set_theme(string $theme):void
 	{
 		$this->set_option('theme', $theme);
 	}
@@ -296,7 +295,7 @@ class load
 		return $this->get_option($theme) ?? 'default';
 	}
 
-	public function set_mode(string $mode)
+	public function set_mode(string $mode):void
 	{
 		if (isset(dep::MODES[$mode]))
 		{
@@ -321,12 +320,12 @@ class load
 		}
 	}
 
-	public function get_mode()
+	public function get_mode():string
 	{
 		return $this->get_option('mode');
 	}
 
-	public function set_keymap(string $keymap)
+	public function set_keymap(string $keymap):void
 	{
 		$this->set_option('keyMap', $keymap);
 	}
@@ -336,19 +335,19 @@ class load
 		return $this->get_option('keyMap') ?? 'default';
 	}
 
-	public function load_keymap(string $keymap)
+	public function load_keymap(string $keymap):void
 	{
 		$this->cm_js[dep::KEYMAPS[$keymap]] = true;
 		$this->keymap_keys[$keymap] = true;
 	}
 
-	public function load_mode(string $mode)
+	public function load_mode(string $mode):void
 	{
 		$this->mode_keys[$mode] = true;
 		$this->cm_js[dep::MODES[$mode]] = true;
 	}
 
-	public function load_all_themes()
+	public function load_all_themes():void
 	{
 		foreach(dep::THEMES as $theme => $loc)
 		{
@@ -356,39 +355,39 @@ class load
 		}
 	}
 
-	public function load_theme(string $theme)
+	public function load_theme(string $theme):void
 	{
 		$this->theme_keys[$theme] = true;
 		$this->cm_css[dep::THEMES[$theme]] = true;
 	}
 
-	public function load_addon(string $addon)
+	public function load_addon(string $addon):void
 	{
 		$this->addon_keys[$addon] = true;
 		$this->cm_js[dep::ADDONS[$addon]] = true;
 	}
 
-	public function load_ext(string $ext)
+	public function load_ext(string $ext):void
 	{
 		$this->ext_js[$ext] = true;
 	}
 
-	public function load_custom_js(string $custom_js)
+	public function load_custom_js(string $custom_js):void
 	{
 		$this->custom_js[$custom_js] = true;
 	}
 
-	public function load_custom_css(string $custom_css)
+	public function load_custom_css(string $custom_css):void
 	{
 		$this->custom_css[$custom_css] = true;
 	}
 
-	public function set_history_id(string $history_id)
+	public function set_history_id(string $history_id):void
 	{
 		$this->history_id = $history_id;
 	}
 
-	public function set_default_content(string $default_content)
+	public function set_default_content(string $default_content):void
 	{
 		$this->default_content = $default_content;
 	}

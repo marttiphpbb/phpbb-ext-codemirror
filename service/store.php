@@ -2,7 +2,7 @@
 
 /**
 * phpBB Extension - marttiphpbb codemirror
-* @copyright (c) 2018 marttiphpbb <info@martti.be>
+* @copyright (c) 2018 - 2020 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 */
 
@@ -27,7 +27,7 @@ class store
 		$this->cache = $cache;
 	}
 
-	private function load()
+	private function load():void
 	{
 		if ($this->data)
 		{
@@ -45,7 +45,7 @@ class store
 		$this->cache->put(self::CACHE_KEY, $this->data);
 	}
 
-	private function write()
+	private function write():void
 	{
 		$this->config_text->set(self::KEY, serialize($this->data));
 		$this->cache->put(self::CACHE_KEY, $this->data);
@@ -63,7 +63,7 @@ class store
 		return $this->data[$key] ?? '';
 	}
 
-	public function set(string $key, string $value)
+	public function set(string $key, string $value):void
 	{
 		$this->load();
 		$this->data[$key] = $value;

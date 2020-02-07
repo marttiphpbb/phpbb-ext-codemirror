@@ -1,7 +1,7 @@
 <?php
 /**
 * phpBB Extension - marttiphpbb codemirror
-* @copyright (c) 2018 marttiphpbb <info@martti.be>
+* @copyright (c) 2018 - 2020 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 */
 
@@ -25,7 +25,7 @@ class extract extends command
 <?php
 /**
 * phpBB Extension - marttiphpbb codemirror
-* @copyright (c) 2018 marttiphpbb <info@martti.be>
+* @copyright (c) 2018 - 2020 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 * This file was generated with the ext-codemirror:extract command
 */

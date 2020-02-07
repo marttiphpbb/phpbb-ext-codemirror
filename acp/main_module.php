@@ -1,7 +1,7 @@
 <?php
 /**
 * phpBB Extension - marttiphpbb codemirror
-* @copyright (c) 2018 marttiphpbb <info@martti.be>
+* @copyright (c) 2018 - 2020 marttiphpbb <info@martti.be>
 * @license GNU General Public License, version 2 (GPL-2.0)
 */
 
@@ -13,7 +13,7 @@ class main_module
 {
 	var $u_action;
 
-	function main($id, $mode)
+	function main($id, $mode):void
 	{
 		global $phpbb_container;
 
@@ -47,7 +47,7 @@ class main_module
 
 					if (!isset($json))
 					{
-						switch (json_last_error()) 
+						switch (json_last_error())
 						{
 							case JSON_ERROR_DEPTH:
 								$err = cnst::L_ACP . '_JSON_ERROR_DEPTH';
@@ -84,9 +84,9 @@ class main_module
 				$load->set_default_content($default_content);
 
 				$config = $store->get('config');
-	
+
 				$template->assign_var('CONFIG', $config ?? $default_content);
-	
+
 			break;
 		}
 

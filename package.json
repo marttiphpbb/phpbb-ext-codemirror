@@ -1,14 +1,14 @@
 {
   "name": "marttiphpbb-codemirror",
-  "version": "0.3.0",
+  "version": "0.6.0",
   "description": "Codemirror integration extension for phpBB",
   "main": "index.js",
   "directories": {
     "doc": "doc"
   },
   "dependencies": {
-    "codemirror": "^5.41.0",
-    "codemirror-colorpicker": "^1.9.48"
+    "codemirror": "^5.51.0",
+    "codemirror-colorpicker": "^1.9.66"
   },
   "devDependencies": {},
   "scripts": {
@@ -24,7 +24,7 @@
     "codemirror"
   ],
   "author": "martti",
-  "license": "GPL-2.0",
+  "license": "GPL-2.0-only",
   "bugs": {
     "url": "https://github.com/marttiphpbb/phpbb-ext-codemirror/issues"
   },
