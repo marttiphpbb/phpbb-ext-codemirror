@@ -7,8 +7,8 @@
     "doc": "doc"
   },
   "dependencies": {
-    "codemirror": "^5.51.0",
-    "codemirror-colorpicker": "^1.9.66"
+    "codemirror": "^5.65.5",
+    "codemirror-colorpicker": "^1.9.80"
   },
   "devDependencies": {},
   "scripts": {
